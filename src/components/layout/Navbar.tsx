@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Layout, Menu, Button } from "antd";
-import { Link } from "react-router-dom";
 import { useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/user.types";
 import { userPaths } from "../../routes/user.routes";
 import { navbarItemsGenerator } from "../../utils/navbarItemsGenerator";
+import { useCurrentToken } from "../../redux/features/auth/authSlice";
+import { adminPaths } from "../../routes/admin.routes";
+import { Link } from "react-router-dom";
 const { Header } = Layout;
 
 const userRole = {
@@ -21,9 +24,9 @@ const Navbar = () => {
         user = verifyToken(token);
     }
 
-    let navbarItems;
+    let navbarItems: any;
 
-    switch ((user as TUser)!.role) {
+    switch ((user as TUser)?.role) {
         case userRole.ADMIN:
             navbarItems = navbarItemsGenerator(adminPaths, userRole.ADMIN);
             break;
@@ -31,6 +34,7 @@ const Navbar = () => {
             navbarItems = navbarItemsGenerator(userPaths, userRole.USER);
             break;
         default:
+            navbarItems = [];
             break;
     }
 
@@ -64,9 +68,11 @@ const Navbar = () => {
                 ></Menu>
 
                 {/* Login Button */}
-                <Button type="primary" style={{ marginLeft: "20px" }}>
-                    Login
-                </Button>
+                <Link to="/login">
+                    <Button type="primary" style={{ marginLeft: "20px" }}>
+                        Login
+                    </Button>
+                </Link>
             </Header>
         </Layout>
     );
