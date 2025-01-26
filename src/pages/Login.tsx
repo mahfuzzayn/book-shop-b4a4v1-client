@@ -1,11 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button, Row } from "antd";
 import { FieldValues } from "react-hook-form";
-import {
-    useLoginMutation,
-    useLoginUserMutation,
-} from "../redux/features/auth/authApi";
+import { useLoginUserMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hook";
 import { setUser, TUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
@@ -14,7 +10,6 @@ import { toast } from "sonner";
 import BSInput from "../components/form/BSInput";
 import BSForm from "../components/form/BSForm";
 import BSPInput from "../components/form/BSPInput";
-import Item from "antd/es/list/Item";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -28,7 +23,33 @@ export default function Login() {
     const [login] = useLoginUserMutation();
 
     const onSubmit = async (data: FieldValues) => {
-        console.log(data);
+        const toastId = toast.loading("Logging in...");
+
+        try {
+            const res = await login(data).unwrap();
+
+            const user = verifyToken(res.data.accessToken) as TUser;
+
+            dispatch(setUser({ user, token: res.data.accessToken }));
+
+            if (res.err) {
+                toast.error("Failed to login user", {
+                    id: toastId,
+                    duration: 2000,
+                });
+            } else {
+                toast.success("User logged in successfully", {
+                    id: toastId,
+                    duration: 2000,
+                });
+                navigate("/");
+            }
+        } catch (error) {
+            toast.error("Something went wrong", {
+                id: toastId,
+                duration: 2000,
+            });
+        }
     };
 
     return (
@@ -38,7 +59,7 @@ export default function Login() {
                     <h2 className="text-4xl font-bold text-center mb-10">
                         Book Shop Login
                     </h2>
-                    <BSInput type="text" name="userEmail" label="Email" />
+                    <BSInput type="text" name="email" label="Email" />
                     <BSPInput
                         type="password"
                         name="password"

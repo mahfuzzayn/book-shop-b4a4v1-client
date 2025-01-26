@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Layout, Menu, Button } from "antd";
-import { useAppSelector } from "../../redux/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/user.types";
 import { userPaths } from "../../routes/user.routes";
 import { navbarItemsGenerator } from "../../utils/navbarItemsGenerator";
-import { useCurrentToken } from "../../redux/features/auth/authSlice";
+import { logout, useCurrentToken } from "../../redux/features/auth/authSlice";
 import { adminPaths } from "../../routes/admin.routes";
 import { Link } from "react-router-dom";
 const { Header } = Layout;
@@ -17,6 +17,7 @@ const userRole = {
 
 const Navbar = () => {
     const token = useAppSelector(useCurrentToken);
+    const dispatch = useAppDispatch();
 
     let user;
 
@@ -68,11 +69,19 @@ const Navbar = () => {
                 ></Menu>
 
                 {/* Login Button */}
-                <Link to="/login">
-                    <Button type="primary" style={{ marginLeft: "20px" }}>
-                        Login
+                {!user ? (
+                    <Link to="/login">
+                        <Button type="primary">Login</Button>
+                    </Link>
+                ) : (
+                    <Button
+                        type="primary"
+                        style={{ backgroundColor: "red" }}
+                        onClick={() => dispatch(logout())}
+                    >
+                        Logout
                     </Button>
-                </Link>
+                )}
             </Header>
         </Layout>
     );

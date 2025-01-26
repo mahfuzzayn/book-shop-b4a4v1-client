@@ -20,7 +20,6 @@ export default function Register() {
     const [register] = useRegisterUserMutation();
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log(data);
         const toastId = toast.loading("Registering...");
 
         const userData = {
@@ -42,8 +41,6 @@ export default function Register() {
                 });
                 navigate("/login");
             }
-
-            console.log(res);
         } catch (error) {
             toast.error("Something went wrong", {
                 id: toastId,
