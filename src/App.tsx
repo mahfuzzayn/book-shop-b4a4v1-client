@@ -1,8 +1,7 @@
+import MainLayout from "./components/layout/MainLayout";
 
 const App = () => {
-  return (
-    <div><h1 className="text-3xl">Hi</h1></div>
-  )
-}
+    return <MainLayout />;
+};
 
-export default App
+export default App;
