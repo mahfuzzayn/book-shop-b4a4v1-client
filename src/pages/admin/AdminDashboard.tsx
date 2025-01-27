@@ -4,9 +4,8 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 import { useState } from "react";
 import { adminSidebarPaths } from "../../routes/admin.routes";
-
 import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
-const { Sider, Content } = Layout;
+const { Sider } = Layout;
 
 const userRole = {
     USER: "user",
@@ -54,7 +53,7 @@ const AdminDashboard: React.FC = () => {
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </button>
             </Sider>
-            <Content
+            {/* <Content
                 style={{
                     margin: "16px",
                     padding: "16px",
@@ -62,12 +61,7 @@ const AdminDashboard: React.FC = () => {
                     borderRadius: 8,
                 }}
             >
-                <h1 style={{ color: "#3e5641" }}>Main Content</h1>
-                <p style={{ color: "#282b28" }}>
-                    This is the main content area. Add your components or page
-                    content here.
-                </p>
-            </Content>
+            </Content> */}
         </Layout>
     );
 };

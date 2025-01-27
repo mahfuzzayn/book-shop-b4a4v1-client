@@ -27,7 +27,7 @@ export const navbarItemsGenerator = (items: TUserPath[], role?: string) => {
                 label: (
                     <NavLink
                         to={`${basePath}/${item.path}`}
-                        className="!text-primary"
+                        className="!text-primary py-6"
                     >
                         {item.name}
                     </NavLink>

@@ -1,4 +1,5 @@
 import AdminDashboard from "../pages/admin/AdminDashboard";
+import Users from "../pages/admin/Users";
 import { publicPaths } from "./public.routes";
 
 export const adminPaths = [
@@ -10,19 +11,19 @@ export const adminPaths = [
         children: [
             {
                 name: "Users",
-                path: "dashboard/users",
-                element: <div>Users Page</div>,
+                path: "/admin/dashboard/users",
+                element: <Users />,
                 visible: false,
             },
             {
                 name: "Products",
-                path: "dashboard/products",
+                path: "/admin/dashboard/products",
                 element: <div>Products Page</div>,
                 visible: false,
             },
             {
                 name: "Orders",
-                path: "dashboard/orders",
+                path: "/admin/dashboard/orders",
                 element: <div>Orders Page</div>,
                 visible: false,
             },

@@ -21,13 +21,6 @@ export default function Login() {
         password: "bookghor2025",
     };
 
-    const sonnerStyles = {
-        style: {
-            backgroundColor: "hsl(128, 16%, 29%)", // Custom background color
-            color: "hsl(160, 30%, 63%)", // Custom text color
-        },
-    };
-
     const [login] = useLoginUserMutation();
 
     const onSubmit = async (data: FieldValues) => {
