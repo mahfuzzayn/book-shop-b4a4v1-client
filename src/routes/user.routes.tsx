@@ -6,4 +6,9 @@ export const userPaths = [
         path: "dashboard",
         element: <UserDashboard />,
     },
+    {
+        name: "Orders",
+        path: "orders",
+        element: <UserDashboard />,
+    },
 ];

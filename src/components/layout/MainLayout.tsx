@@ -1,30 +1,22 @@
-import { Layout, Button } from "antd";
+import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
-import Navbar from "./NavBar";
-const { Header, Content, Footer } = Layout;
+import Navbar from "./Navbar";
+
+const { Content, Footer } = Layout;
 
 const MainLayout = () => {
-    const handleLogout = () => {};
-
     return (
-        <Layout style={{ height: "100%" }}>
+        <Layout>
             <Navbar />
             <Layout>
-                <Header style={{ padding: 0 }}>
-                    <Button onClick={handleLogout}>Logout</Button>
-                </Header>
-                <Content style={{ margin: "24px 16px 0" }}>
-                    <div
-                        style={{
-                            padding: 24,
-                            minHeight: 360,
-                        }}
-                    >
+                <Content>
+                    <div className="min-h-screen">
                         <Outlet />
                     </div>
                 </Content>
                 <Footer style={{ textAlign: "center" }}>
-                    Ant Design ©{new Date().getFullYear()} Created by Ant UED
+                    Book Shop ©{new Date().getFullYear()} Created by Mahfuz Zayn
+                    💖
                 </Footer>
             </Layout>
         </Layout>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, ConfigProvider } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/user.types";
@@ -13,6 +13,14 @@ const { Header } = Layout;
 const userRole = {
     USER: "user",
     ADMIN: "admin",
+};
+
+const theme = {
+    token: {
+        colorText: "hsl(128, 16%, 29%)",
+        colorTextHover: "hsl(17, 64%, 52%)",
+        colorPrimary: "hsl(11, 50%, 42%)",
+    },
 };
 
 const Navbar = () => {
@@ -55,28 +63,33 @@ const Navbar = () => {
                 <div style={{ display: "flex", alignItems: "center" }}>
                     <h2 className="text-2xl font-extrabold">Book Shop</h2>
                 </div>
-
                 {/* Navigation Links */}
-                <Menu
-                    mode="horizontal"
-                    style={{
-                        flex: 1,
-                        justifyContent: "flex-end",
-                        borderBottom: "none",
-                    }}
-                    selectable={false}
-                    items={navbarItems}
-                ></Menu>
-
-                {/* Login Button */}
+                <ConfigProvider theme={theme}>
+                    <Menu
+                        mode="horizontal"
+                        style={{
+                            flex: 1,
+                            justifyContent: "flex-end",
+                            borderBottom: "none",
+                        }}
+                        className="font-semibold"
+                        selectable={false}
+                        items={navbarItems}
+                    ></Menu>
+                </ConfigProvider>
                 {!user ? (
                     <Link to="/login">
-                        <Button type="primary">Login</Button>
+                        <Button
+                            type="primary"
+                            className="!bg-primary !font-semibold"
+                        >
+                            Login
+                        </Button>
                     </Link>
                 ) : (
                     <Button
                         type="primary"
-                        style={{ backgroundColor: "red" }}
+                        className="!bg-dark !font-semibold"
                         onClick={() => dispatch(logout())}
                     >
                         Logout

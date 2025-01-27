@@ -52,7 +52,7 @@ export default function Register() {
     return (
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                <div className="space-y-5 bg-blue-200 p-20 rounded-xl">
+                <div className="space-y-5 bg-accent p-20 rounded-xl">
                     <h2 className="text-4xl font-bold text-center mb-10">
                         Book Shop Register
                     </h2>
@@ -65,11 +65,27 @@ export default function Register() {
                     />
                     <h5>
                         Already have an Account?{" "}
-                        <span className="text-blue-600">
-                            <Link to="/login">Login</Link>
+                        <span>
+                            <Link to="/login" className="!text-dark">
+                                Login
+                            </Link>
                         </span>
                     </h5>
-                    <Button htmlType="submit">Register</Button>
+                    <Button
+                        htmlType="submit"
+                        type="primary"
+                        className="!bg-primary"
+                    >
+                        Register
+                    </Button>
+                    <h5 className="text-center mt-10">
+                        Back to{" "}
+                        <span>
+                            <Link to="/" className="!text-dark">
+                                Home
+                            </Link>
+                        </span>
+                    </h5>
                 </div>
             </BSForm>
         </Row>
