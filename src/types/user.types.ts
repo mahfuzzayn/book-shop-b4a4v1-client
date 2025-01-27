@@ -1,3 +1,5 @@
+import { JwtPayload } from "jwt-decode";
+
 export interface TUser {
     _id: string;
     name: string;
@@ -9,4 +11,8 @@ export interface TUser {
     createdAt: string;
     updatedAt: string;
     __v: number;
+}
+
+export interface CustomJwtPayload extends JwtPayload {
+    role?: string;
 }

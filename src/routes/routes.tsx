@@ -5,6 +5,8 @@ import { userPaths } from "./user.routes";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import { publicPaths } from "./public.routes";
+import ProtectedRoute from "../components/layout/ProtectedRoute";
+import { adminPaths } from "./admin.routes";
 
 const router = createBrowserRouter([
     {
@@ -14,13 +16,21 @@ const router = createBrowserRouter([
     },
     {
         path: "/user",
-        element: <App />,
+        element: (
+            <ProtectedRoute role="user">
+                <App />
+            </ProtectedRoute>
+        ),
         children: routesGenerator(userPaths),
     },
     {
         path: "/admin",
-        element: <App />,
-        children: routesGenerator(userPaths),
+        element: (
+            <ProtectedRoute role="admin">
+                <App />
+            </ProtectedRoute>
+        ),
+        children: routesGenerator(adminPaths),
     },
     {
         path: "/login",

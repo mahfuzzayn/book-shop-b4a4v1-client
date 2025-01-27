@@ -81,7 +81,7 @@ export default function Login() {
                     <h5>
                         Don't have an Account?{" "}
                         <span>
-                            <Link to="/register" className="!text-dark">
+                            <Link to="/register" className="!text-secondary">
                                 Register
                             </Link>
                         </span>
@@ -96,7 +96,7 @@ export default function Login() {
                     <h5 className="text-center mt-10">
                         Back to{" "}
                         <span>
-                            <Link to="/" className="!text-dark">
+                            <Link to="/" className="!text-secondary">
                                 Home
                             </Link>
                         </span>

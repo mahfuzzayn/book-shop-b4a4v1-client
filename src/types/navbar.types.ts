@@ -5,11 +5,13 @@ export type TRoute = {
     element: ReactNode;
 };
 
-export type TNavbarItem = {
-    key: string | undefined;
-    label: ReactNode;
-    children?: TNavbarItem[];
-} | undefined;
+export type TNavbarItem =
+    | {
+          key: string | undefined;
+          label: ReactNode;
+          children?: TNavbarItem[];
+      }
+    | undefined;
 
 export type TUserPath = {
     name?: string;
@@ -17,4 +19,5 @@ export type TUserPath = {
     element?: ReactNode;
     children?: TUserPath[];
     isPublic?: boolean;
-  };
+    visible?: boolean;
+};

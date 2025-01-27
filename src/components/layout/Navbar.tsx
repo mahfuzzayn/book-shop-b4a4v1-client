@@ -32,6 +32,10 @@ const Navbar = () => {
 
     if (token) {
         user = verifyToken(token);
+
+        if (!user) {
+            dispatch(logout());
+        }
     }
 
     let navbarItems: any;
@@ -56,13 +60,17 @@ const Navbar = () => {
                     justifyContent: "space-between",
                     alignItems: "center",
                     padding: "0 20px",
-                    background: "#fff",
                     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
                 }}
+                className="!bg-accent"
             >
                 {/* Logo */}
                 <div style={{ display: "flex", alignItems: "center" }}>
-                    <h2 className="text-2xl font-extrabold">Book Shop</h2>
+                    <h2 className="text-2xl font-extrabold">
+                        <Link to="/" className="!text-primary">
+                            Book <span className="!text-dark">Shop</span>
+                        </Link>
+                    </h2>
                 </div>
                 {/* Navigation Links */}
                 <ConfigProvider theme={theme}>
@@ -73,7 +81,7 @@ const Navbar = () => {
                             justifyContent: "flex-end",
                             borderBottom: "none",
                         }}
-                        className="font-semibold"
+                        className="!bg-accent font-semibold"
                         selectable={false}
                         items={navbarItems}
                     ></Menu>
@@ -90,7 +98,7 @@ const Navbar = () => {
                 ) : (
                     <Button
                         type="primary"
-                        className="!bg-dark !font-semibold"
+                        className="!bg-secondary !font-semibold"
                         onClick={() => dispatch(logout())}
                     >
                         Logout

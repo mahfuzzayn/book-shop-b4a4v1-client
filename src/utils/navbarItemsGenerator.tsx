@@ -6,7 +6,11 @@ export const navbarItemsGenerator = (items: TUserPath[], role?: string) => {
         const isPublic = item.isPublic || !role;
         const basePath = isPublic ? "" : `/${role}`;
 
-        if (item.path && item.name) {
+        if (item.visible === false) {
+            return acc;
+        }
+
+        if (item.path && item.name && !item.children) {
             acc.push({
                 key: item.name,
                 label: (
@@ -16,23 +20,28 @@ export const navbarItemsGenerator = (items: TUserPath[], role?: string) => {
                 ),
             });
         }
-        if (item.children) {
+
+        if (item.path && item.name && item.children) {
             acc.push({
                 key: item.name,
-                label: item.name,
-                children: item.children.map((child) => {
-                    if (child.name) {
-                        const childBasePath = isPublic ? "" : `/${role}`;
-                        return {
-                            key: child.name,
-                            label: (
-                                <NavLink to={`${childBasePath}/${child.path}`}>
-                                    {child.name}
-                                </NavLink>
-                            ),
-                        };
-                    }
-                }),
+                label: (
+                    <NavLink
+                        to={`${basePath}/${item.path}`}
+                        className="!text-primary"
+                    >
+                        {item.name}
+                    </NavLink>
+                ),
+                children: item.children
+                    .filter((child) => child.visible !== false)
+                    .map((child) => ({
+                        key: child.name,
+                        label: (
+                            <NavLink to={`${basePath}/${child.path}`}>
+                                {child.name}
+                            </NavLink>
+                        ),
+                    })),
             });
         }
 

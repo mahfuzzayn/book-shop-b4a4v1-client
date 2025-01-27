@@ -11,9 +11,9 @@
 
 @theme {
     --color-primary: hsl(74, 32%, 32%); /* Hunter Green */
-    --color-secondary: hsl(88, 38%, 15%); /* Chestnut */
+    --color-secondary: hsl(32, 65%, 62%); /* Jet */
     --color-accent: hsl(52, 94%, 94%); /* Flame */
-    --color-dark: hsl(32, 65%, 62%); /* Jet */
+    --color-dark: hsl(88, 38%, 15%); /* Chestnut */
     --color-light: hsl(28, 67%, 44%); /* Cambridge Blue */
 
     /* Functional Colors */
