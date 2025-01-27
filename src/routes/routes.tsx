@@ -4,10 +4,16 @@ import { routesGenerator } from "../utils/routesGenerator";
 import { userPaths } from "./user.routes";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import { publicPaths } from "./public.routes";
 
 const router = createBrowserRouter([
     {
         path: "/",
+        element: <App />,
+        children: routesGenerator(publicPaths),
+    },
+    {
+        path: "/user",
         element: <App />,
         children: routesGenerator(userPaths),
     },

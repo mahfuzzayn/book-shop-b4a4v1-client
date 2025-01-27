@@ -16,4 +16,5 @@ export type TUserPath = {
     path?: string;
     element?: ReactNode;
     children?: TUserPath[];
-};
+    isPublic?: boolean;
+  };

@@ -1,14 +1,12 @@
 import UserDashboard from "../pages/user/UserDashboard";
+import { publicPaths } from "./public.routes";
 
 export const userPaths = [
+    ...publicPaths,
     {
         name: "Dashboard",
         path: "dashboard",
         element: <UserDashboard />,
-    },
-    {
-        name: "Orders",
-        path: "orders",
-        element: <UserDashboard />,
+        isPublic: false,
     },
 ];

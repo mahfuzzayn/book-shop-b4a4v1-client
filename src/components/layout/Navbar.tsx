@@ -8,6 +8,7 @@ import { navbarItemsGenerator } from "../../utils/navbarItemsGenerator";
 import { logout, useCurrentToken } from "../../redux/features/auth/authSlice";
 import { adminPaths } from "../../routes/admin.routes";
 import { Link } from "react-router-dom";
+import { publicPaths } from "../../routes/public.routes";
 const { Header } = Layout;
 
 const userRole = {
@@ -43,7 +44,7 @@ const Navbar = () => {
             navbarItems = navbarItemsGenerator(userPaths, userRole.USER);
             break;
         default:
-            navbarItems = [];
+            navbarItems = navbarItemsGenerator(publicPaths);
             break;
     }
 
