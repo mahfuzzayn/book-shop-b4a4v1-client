@@ -7,6 +7,7 @@ import Register from "../pages/Register";
 import { publicPaths } from "./public.routes";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import { adminPaths } from "./admin.routes";
+import Checkout from "../pages/public/Checkout";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +40,14 @@ const router = createBrowserRouter([
     {
         path: "/register",
         element: <Register />,
+    },
+    {
+        path: "/checkout",
+        element: (
+            <ProtectedRoute role="user">
+                <Checkout />
+            </ProtectedRoute>
+        ),
     },
 ]);
 

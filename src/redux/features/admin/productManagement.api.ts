@@ -1,6 +1,6 @@
+import { TProduct } from "../../../types";
 import { TQueryParam, TResponseRedux } from "../../../types/global.types";
 import { baseApi } from "../../api/baseApi";
-import { TUser } from "../auth/authSlice";
 
 const productManagementApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -20,7 +20,7 @@ const productManagementApi = baseApi.injectEndpoints({
                     params,
                 };
             },
-            transformResponse: (response: TResponseRedux<TUser[]>) => {
+            transformResponse: (response: TResponseRedux<TProduct[]>) => {
                 return {
                     data: response.data,
                     meta: response.meta,

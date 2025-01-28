@@ -9,15 +9,7 @@ import {
     useGetAllProductsQuery,
 } from "../../redux/features/admin/productManagement.api";
 import { Link } from "react-router-dom";
-import {
-    Button,
-    Checkbox,
-    CheckboxProps,
-    Image,
-    Select,
-    Slider,
-    Spin,
-} from "antd";
+import { Button, Checkbox, Image, Select, Slider, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { productCategories } from "../../constants/product";
 
@@ -26,13 +18,12 @@ const Products = () => {
     const [page, setPage] = useState(1);
     const [availability, setAvailability] = useState<boolean | undefined>(
         undefined
-    ); // Default to undefined
+    );
 
     const {
         data: productsData,
         isLoading,
         isFetching,
-        refetch,
     } = useGetAllProductsQuery([
         { name: "limit", value: 5 },
         { name: "page", value: page },
