@@ -1,5 +1,6 @@
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import Users from "../pages/admin/Users";
+import Products from "../pages/admin/Products";
 import { publicPaths } from "./public.routes";
 
 export const adminPaths = [
@@ -18,7 +19,7 @@ export const adminPaths = [
             {
                 name: "Products",
                 path: "/admin/dashboard/products",
-                element: <div>Products Page</div>,
+                element: <Products />,
                 visible: false,
             },
             {

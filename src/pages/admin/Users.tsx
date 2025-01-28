@@ -14,7 +14,7 @@ import {
     useDeactivateUserMutation,
     useGetAllUsersQuery,
 } from "../../redux/features/admin/userManagement.api";
-import { TUser } from "../../types/user.types";
+import { TUser } from "../../types/userManagement.types";
 import { TQueryParam, TResponse } from "../../types";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { toast } from "sonner";
@@ -142,7 +142,6 @@ const Users = () => {
             title: "Action",
             key: "x",
             render: (item) => {
-                console.log(item);
                 return (
                     <Space>
                         <Space wrap>

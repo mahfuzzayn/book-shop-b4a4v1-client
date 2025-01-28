@@ -2,7 +2,7 @@
 import { Layout, Menu, Button, ConfigProvider } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
-import { TUser } from "../../types/user.types";
+import { TUser } from "../../types/userManagement.types";
 import { userPaths } from "../../routes/user.routes";
 import { navbarItemsGenerator } from "../../utils/navbarItemsGenerator";
 import { logout, useCurrentToken } from "../../redux/features/auth/authSlice";

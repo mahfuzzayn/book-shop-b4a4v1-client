@@ -2,9 +2,9 @@ import { TQueryParam, TResponseRedux } from "../../../types/global.types";
 import { baseApi } from "../../api/baseApi";
 import { TUser } from "../auth/authSlice";
 
-const userManagementApi = baseApi.injectEndpoints({
+const productManagementApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getAllUsers: builder.query({
+        getAllProducts: builder.query({
             query: (args) => {
                 const params = new URLSearchParams();
 
@@ -15,7 +15,7 @@ const userManagementApi = baseApi.injectEndpoints({
                 }
 
                 return {
-                    url: "/users",
+                    url: "/products",
                     method: "GET",
                     params,
                 };
@@ -26,20 +26,32 @@ const userManagementApi = baseApi.injectEndpoints({
                     meta: response.meta,
                 };
             },
-            providesTags: ["users"],
+            providesTags: ["products"],
         }),
-        deactivateUser: builder.mutation({
-            query: (args) => {
+        addProduct: builder.mutation({
+            query: (data) => {
                 return {
-                    url: `/users/change-status/${args.userId}`,
+                    url: "/products/create-product",
                     method: "POST",
-                    body: args.data,
+                    body: data,
                 };
             },
-            invalidatesTags: ["users"],
+            invalidatesTags: ["products"],
+        }),
+        deleteProduct: builder.mutation({
+            query: (productId) => {
+                return {
+                    url: `/products/${productId}`,
+                    method: "DELETE",
+                };
+            },
+            invalidatesTags: ["products"],
         }),
     }),
 });
 
-export const { useGetAllUsersQuery, useDeactivateUserMutation } =
-    userManagementApi;
+export const {
+    useGetAllProductsQuery,
+    useAddProductMutation,
+    useDeleteProductMutation,
+} = productManagementApi;
