@@ -28,6 +28,14 @@ const productManagementApi = baseApi.injectEndpoints({
             },
             providesTags: ["products"],
         }),
+        getAllAuthors: builder.query({
+            query: () => {
+                return {
+                    url: "/products/authors",
+                    method: "GET",
+                };
+            },
+        }),
         getSingleProduct: builder.query({
             query: (productId) => {
                 return {
@@ -55,7 +63,7 @@ const productManagementApi = baseApi.injectEndpoints({
                     body: args.data,
                 };
             },
-            invalidatesTags: ["singleProduct"],
+            invalidatesTags: ["singleProduct", "products"],
         }),
         deleteProduct: builder.mutation({
             query: (productId) => {
@@ -71,6 +79,7 @@ const productManagementApi = baseApi.injectEndpoints({
 
 export const {
     useGetAllProductsQuery,
+    useGetAllAuthorsQuery,
     useAddProductMutation,
     useDeleteProductMutation,
     useGetSingleProductQuery,
