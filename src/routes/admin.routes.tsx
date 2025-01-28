@@ -2,6 +2,8 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import Users from "../pages/admin/Users";
 import Products from "../pages/admin/Products";
 import { publicPaths } from "./public.routes";
+import UpdateProduct from "../pages/admin/UpdateProduct";
+import ProductDetail from "../pages/admin/ProductDetail";
 
 export const adminPaths = [
     ...publicPaths,
@@ -20,6 +22,18 @@ export const adminPaths = [
                 name: "Products",
                 path: "/admin/dashboard/products",
                 element: <Products />,
+                visible: false,
+            },
+            {
+                name: "View Product",
+                path: "/admin/dashboard/products/detail/:productId",
+                element: <ProductDetail />,
+                visible: false,
+            },
+            {
+                name: "Update Product",
+                path: "/admin/dashboard/products/update/:productId",
+                element: <UpdateProduct />,
                 visible: false,
             },
             {

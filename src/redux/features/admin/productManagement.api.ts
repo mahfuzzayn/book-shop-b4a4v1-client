@@ -28,6 +28,15 @@ const productManagementApi = baseApi.injectEndpoints({
             },
             providesTags: ["products"],
         }),
+        getSingleProduct: builder.query({
+            query: (productId) => {
+                return {
+                    url: `/products/${productId}`,
+                    method: "GET",
+                };
+            },
+            providesTags: ["singleProduct"],
+        }),
         addProduct: builder.mutation({
             query: (data) => {
                 return {
@@ -37,6 +46,16 @@ const productManagementApi = baseApi.injectEndpoints({
                 };
             },
             invalidatesTags: ["products"],
+        }),
+        updateProduct: builder.mutation({
+            query: (args) => {
+                return {
+                    url: `/products/${args.productId}`,
+                    method: "PATCH",
+                    body: args.data,
+                };
+            },
+            invalidatesTags: ["singleProduct"],
         }),
         deleteProduct: builder.mutation({
             query: (productId) => {
@@ -54,4 +73,6 @@ export const {
     useGetAllProductsQuery,
     useAddProductMutation,
     useDeleteProductMutation,
+    useGetSingleProductQuery,
+    useUpdateProductMutation,
 } = productManagementApi;
