@@ -1,17 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
-import { TQueryParam } from "../../types";
+import { TQueryParam, TResponse } from "../../types";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import {
     useGetAllAuthorsQuery,
     useGetAllProductsQuery,
 } from "../../redux/features/admin/productManagement.api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Image, Select, Slider, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { productCategories } from "../../constants/product";
+import { useAddItemMutation } from "../../redux/features/cart/cartApi";
+import { useAppSelector } from "../../redux/hook";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 
 const Products = () => {
     const [params, setParams] = useState<TQueryParam[]>([]);
@@ -19,6 +22,44 @@ const Products = () => {
     const [availability, setAvailability] = useState<boolean | undefined>(
         undefined
     );
+    const user = useAppSelector(selectCurrentUser);
+    const [addItem] = useAddItemMutation();
+    const navigate = useNavigate();
+
+    const handleBuyNow = async (productId: string) => {
+        const itemData = {
+            item: {
+                productId,
+                userId: user?.userId,
+                quantity: 1,
+            },
+        };
+
+        const toastId = toast.loading("Adding to cart...");
+
+        try {
+            const res = (await addItem(itemData)) as TResponse<any>;
+
+            if (res.error) {
+                toast.error(res.error.data.message, {
+                    id: toastId,
+                    style: toastStyles.error,
+                });
+            } else {
+                toast.success("Added to cart", {
+                    id: toastId,
+                    style: toastStyles.success,
+                });
+
+                navigate("/checkout");
+            }
+        } catch (error) {
+            toast.error("Something went wrong", {
+                id: toastId,
+                style: toastStyles.error,
+            });
+        }
+    };
 
     const {
         data: productsData,
@@ -129,12 +170,6 @@ const Products = () => {
                 { name: "minPrice", value: priceData.minPrice },
                 { name: "maxPrice", value: priceData.maxPrice },
             ];
-        });
-    };
-
-    const handleBuyNow = (productId: string) => {
-        toast.success(`Product ${productId} added to cart!`, {
-            style: toastStyles.success,
         });
     };
 
@@ -254,14 +289,17 @@ const Products = () => {
                                     }}
                                     className="mt-auto gap-x-3"
                                 >
-                                    <Button
-                                        type="primary"
-                                        className="!bg-primary w-full"
+                                    <Link
+                                        to={`detail/${product._id}`}
+                                        className="w-full"
                                     >
-                                        <Link to={`detail/${product._id}`}>
+                                        <Button
+                                            type="primary"
+                                            className="!bg-primary w-full"
+                                        >
                                             Details
-                                        </Link>
-                                    </Button>
+                                        </Button>
+                                    </Link>
                                     <Button
                                         type="primary"
                                         className="!bg-secondary w-full"

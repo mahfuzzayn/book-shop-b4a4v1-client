@@ -1,101 +1,292 @@
-import { Form, Input, InputNumber, Button, Card, Divider } from "antd";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+    useGetCartQuery,
+    useUpdateQuantityMutation,
+    useRemoveItemMutation,
+    useClearCartMutation,
+} from "../../redux/features/cart/cartApi";
+import { Button, Card, Typography, Space, Spin, Image } from "antd";
+import {
+    ArrowLeftOutlined,
+    MinusOutlined,
+    PlusOutlined,
+} from "@ant-design/icons";
+import { useAppSelector } from "../../redux/hook";
+import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { TCartData, TCartItem, TResponse } from "../../types";
+import { toast } from "sonner";
+import { toastStyles } from "../../constants/toaster";
+import { Link } from "react-router-dom";
+import { useCreatePaymentIntentMutation } from "../../redux/features/order/order.api";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { useState } from "react";
+import PaymentForm from "./PaymentForm";
+import config from "../../config";
 
-const Checkout = ({ product, user }) => {
-    const [form] = Form.useForm();
+const stripePromise = loadStripe(config.stripe_publishable_key);
 
-    const handleSubmit = (values) => {
-        console.log("Order Details:", values);
-        // Call SurjoPay payment API here
+const { Title, Text } = Typography;
+
+const CheckoutPage = () => {
+    const user = useAppSelector(selectCurrentUser);
+    const {
+        data: cart,
+        isLoading,
+        isError,
+        isFetching,
+    } = useGetCartQuery(user?.userId);
+
+    const [updateQuantity] = useUpdateQuantityMutation();
+    const [removeItem] = useRemoveItemMutation();
+    const [clearCart] = useClearCartMutation();
+    const [createPaymentIntent] = useCreatePaymentIntentMutation();
+    const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [isPaymentPrepared, setIsPaymentPrepared] = useState(false);
+    const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+
+    const handleUpdateQuantity = async (
+        productId: string,
+        quantity: number
+    ) => {
+        if (quantity > 1 || quantity < -1) return;
+
+        const res = (await updateQuantity({
+            userId: user?.userId,
+            productId,
+            quantity,
+        })) as TResponse<TCartData>;
+
+        if (res.error) {
+            toast.error(res.error.data.message, { style: toastStyles.error });
+        }
     };
 
-    const calculateTotal = (quantity, price) => {
-        return (quantity || 0) * (price || 0);
+    const handleRemoveItem = async (productId: string) => {
+        const res = (await removeItem({
+            userId: user?.userId,
+            productId,
+        })) as TResponse<TCartData>;
+
+        if (res.error) {
+            toast.error(res.error.data.message, { style: toastStyles.error });
+        } else {
+            toast.success("Item removed", { style: toastStyles.success });
+        }
     };
+
+    const calculateSubtotal = (): number => {
+        if (!cart?.data || !cart?.data.items) return 0;
+
+        const total = cart.data.items.reduce(
+            (acc: number, item: TCartItem) => acc + item.price * item.quantity,
+            0
+        );
+
+        return parseFloat(total.toFixed(2));
+    };
+
+    const handlePreparePayment = async () => {
+        const toastId = toast.loading("Preparing payment", {
+            style: toastStyles.loading,
+        });
+
+        const res = (await createPaymentIntent({
+            amount: calculateSubtotal() * 100,
+            currency: "usd",
+        })) as TResponse<any>;
+
+        if (res.error) {
+            toast.error(res.error.message, {
+                id: toastId,
+                style: toastStyles.error,
+            });
+            return;
+        }
+
+        const { clientSecret } = res.data.data;
+
+        if (clientSecret) {
+            toast.success("Ready to accept payment via card", {
+                id: toastId,
+                style: toastStyles.success,
+            });
+            setIsPaymentPrepared(true);
+            setClientSecret(clientSecret);
+        }
+    };
+
+    if (isLoading)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    if (isError)
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                <h2 className="text-2xl font-semibold">
+                    Failed to load your Cart
+                </h2>
+                <Link to="/products">
+                    <Button type="primary" className="!bg-primary">
+                        Back to Products
+                    </Button>
+                </Link>
+            </div>
+        );
 
     return (
-        <Card
-            title="Checkout Page"
-            style={{ maxWidth: "600px", margin: "auto" }}
-        >
-            <Form
-                form={form}
-                layout="vertical"
-                onFinish={handleSubmit}
-                initialValues={{
-                    productName: product.name,
-                    quantity: 1,
-                    price: product.price,
-                    userName: user.name,
-                    email: user.email,
-                }}
-            >
-                <Form.Item label="Product Name" name="productName">
-                    <Input disabled />
-                </Form.Item>
-
-                <Form.Item
-                    label="Quantity"
-                    name="quantity"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the quantity!",
-                        },
-                        ({ getFieldValue }) => ({
-                            validator(_, value) {
-                                if (value > product.stock) {
-                                    return Promise.reject(
-                                        new Error(
-                                            "Quantity exceeds available stock!"
-                                        )
-                                    );
+        <div className="checkout-page flex justify-between p-8">
+            <div className="cart-items flex-1 mr-8">
+                <Title
+                    level={2}
+                    className="flex items-center gap-x-3 !font-bold"
+                >
+                    <Link to="/products" className="!mb-1">
+                        <Button type="primary" className="!bg-primary">
+                            <ArrowLeftOutlined />
+                            Products
+                        </Button>
+                    </Link>
+                    Cart
+                </Title>
+                {cart?.data?.items?.length === 0 ? (
+                    <h2 className="text-lg font-semibold">
+                        No items in your cart.
+                    </h2>
+                ) : (
+                    cart?.data?.items?.map((item: TCartItem) => (
+                        <Card
+                            key={item._id}
+                            title={item.title}
+                            extra={
+                                <Button
+                                    onClick={() =>
+                                        handleRemoveItem(item.productId)
+                                    }
+                                    type="link"
+                                    className="!text-dark"
+                                >
+                                    Remove
+                                </Button>
+                            }
+                            style={{ marginBottom: 20 }}
+                        >
+                            <div className="flex flex-col gap-y-3">
+                                <Image
+                                    src={item.image}
+                                    className="max-w-[180px] rounded-lg"
+                                    width={180}
+                                />
+                                <p className="font-normal">
+                                    Author{" "}
+                                    <span className="font-bold text-primary">
+                                        {item.author}
+                                    </span>
+                                </p>
+                                <p className="font-normal">
+                                    Price{" "}
+                                    <span className="font-bold text-secondary">
+                                        {item.price}$
+                                    </span>
+                                </p>
+                                <Space>
+                                    <Button
+                                        icon={<MinusOutlined />}
+                                        onClick={() => {
+                                            if (!isPaymentPrepared) {
+                                                return handleUpdateQuantity(
+                                                    item.productId,
+                                                    -1
+                                                );
+                                            }
+                                        }}
+                                        disabled={
+                                            item.quantity <= 1 ||
+                                            isFetching ||
+                                            isPaymentPrepared
+                                        }
+                                    />
+                                    <Text>{item.quantity}</Text>
+                                    <Button
+                                        icon={<PlusOutlined />}
+                                        onClick={() => {
+                                            if (!isPaymentPrepared) {
+                                                return handleUpdateQuantity(
+                                                    item.productId,
+                                                    1
+                                                );
+                                            }
+                                        }}
+                                        disabled={
+                                            isFetching || isPaymentPrepared
+                                        }
+                                    />
+                                </Space>
+                            </div>
+                        </Card>
+                    ))
+                )}
+            </div>
+            <div className="cart-summary w-72 p-4 bg-accent rounded shadow-md">
+                <p className="!text-2xl font-bold">Subtotal</p>
+                <div className="flex flex-col gap-y-2 my-4">
+                    {cart?.data?.items?.map((item, index) => (
+                        <span key={item._id} className="font-normal text-dark">
+                            {index + 1}. {item.price}$ x {item.quantity} ={" "}
+                            {item.price * item.quantity}$
+                        </span>
+                    ))}
+                </div>
+                <p className="text-lg font-bold">
+                    Total: {calculateSubtotal()}$
+                </p>
+                {!cart?.data?.items?.length ||
+                    (!clientSecret && (
+                        <div className="flex flex-col gap-y-5 mt-5">
+                            <Button
+                                type="primary"
+                                className="!bg-secondary w-full"
+                                onClick={handlePreparePayment}
+                            >
+                                Prepare Payment
+                            </Button>
+                            <Button
+                                onClick={() =>
+                                    clearCart({ userId: user?.userId })
                                 }
-                                return Promise.resolve();
-                            },
-                        }),
-                    ]}
-                >
-                    <InputNumber min={1} max={product.stock} />
-                </Form.Item>
-
-                <Form.Item label="Price (Per Unit)" name="price">
-                    <Input disabled />
-                </Form.Item>
-
-                <Divider />
-
-                <h3>
-                    Total:{" "}
-                    {calculateTotal(
-                        form.getFieldValue("quantity"),
-                        form.getFieldValue("price")
-                    )}
-                </h3>
-
-                <Divider />
-
-                <Form.Item
-                    label="Name"
-                    name="userName"
-                    rules={[{ required: true }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[{ required: true }]}
-                >
-                    <Input />
-                </Form.Item>
-
-                <Button type="primary" htmlType="submit">
-                    Order Now
-                </Button>
-            </Form>
-        </Card>
+                                danger
+                                className="w-full"
+                            >
+                                Clear Cart
+                            </Button>
+                        </div>
+                    ))}
+                {/* Stripe Payment Form Element */}
+                {clientSecret && (
+                    <Elements stripe={stripePromise} options={{ clientSecret }}>
+                        <PaymentForm
+                            clearCart={clearCart}
+                            userId={user?.userId}
+                            cartItems={cart?.data?.items}
+                            clientSecret={clientSecret}
+                            setClientSecret={setClientSecret}
+                            setIsPaymentSuccess={setIsPaymentSuccess}
+                        />
+                    </Elements>
+                )}
+                {isPaymentSuccess && (
+                    <p className="text-center text-sm font-semibold mt-5">
+                        View orders on{" "}
+                        <Link to="/user/dashboard" className="text-primary">
+                            Dashboard
+                        </Link>
+                    </p>
+                )}
+            </div>
+        </div>
     );
 };
 
-export default Checkout;
+export default CheckoutPage;
