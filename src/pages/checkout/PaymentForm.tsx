@@ -60,7 +60,7 @@ const PaymentForm = ({
                 order: {
                     userId,
                     items: cartItems,
-                    total: paymentIntent.amount / 100,
+                    total: paymentIntent.amount / 10000,
                     status: "pending",
                     transactionId: paymentIntent.id,
                     createdAt: new Date().toISOString(),

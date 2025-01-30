@@ -42,6 +42,12 @@ export const adminPaths = [
                 element: <div>Orders Page</div>,
                 visible: false,
             },
+            {
+                name: "Orders",
+                path: "/admin/dashboard/profile",
+                element: <div>Profile Page</div>,
+                visible: false,
+            },
         ],
     },
 ];
@@ -61,6 +67,10 @@ export const adminSidebarPaths = [
             {
                 path: "orders",
                 name: "Orders",
+            },
+            {
+                path: "profile",
+                name: "Profile",
             },
         ],
     },

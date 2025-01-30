@@ -7,7 +7,7 @@ import Register from "../pages/Register";
 import { publicPaths } from "./public.routes";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import { adminPaths } from "./admin.routes";
-import Checkout from "../pages/public/Checkout";
+import Checkout from "../pages/checkout/Checkout";
 
 const router = createBrowserRouter([
     {

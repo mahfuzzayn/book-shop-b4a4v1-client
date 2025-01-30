@@ -15,9 +15,28 @@ const paymentApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: data,
             }),
+            invalidatesTags: ["products", "orders"],
+        }),
+        getUserOrders: builder.query({
+            query: (userId) => ({
+                url: `/orders/${userId}`,
+                method: "GET",
+            }),
+            providesTags: ["orders"],
+        }),
+        updateOrderStatusByUser: builder.mutation({
+            query: (orderId) => ({
+                url: `/orders/cancel/${orderId}`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["orders"],
         }),
     }),
 });
 
-export const { useCreatePaymentIntentMutation, useAddOrderMutation } =
-    paymentApi;
+export const {
+    useAddOrderMutation,
+    useGetUserOrdersQuery,
+    useUpdateOrderStatusByUserMutation,
+    useCreatePaymentIntentMutation,
+} = paymentApi;
