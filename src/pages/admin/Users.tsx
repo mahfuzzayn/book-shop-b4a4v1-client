@@ -5,6 +5,7 @@ import {
     Modal,
     Pagination,
     Space,
+    Spin,
     Table,
     TableColumnsType,
     TableProps,
@@ -19,6 +20,7 @@ import { TQueryParam, TResponse } from "../../types";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
+import { Link } from "react-router-dom";
 
 type TTableData = Pick<TUser, "_id" | "name" | "email" | "isDeactivated">;
 
@@ -105,6 +107,7 @@ const Users = () => {
         data: usersData,
         isLoading,
         isFetching,
+        isError,
     } = useGetAllUsersQuery([
         { name: "limit", value: 10 },
         { name: "page", value: page },
@@ -200,9 +203,26 @@ const Users = () => {
         }
     };
 
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
+    if (isLoading)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+
+    if (isError)
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                <h2 className="text-2xl font-semibold">
+                    Failed to load your Orders
+                </h2>
+                <Link to="/admin/dashboard">
+                    <Button type="primary" className="!bg-primary">
+                        Back to Dashboard
+                    </Button>
+                </Link>
+            </div>
+        );
 
     return (
         <>

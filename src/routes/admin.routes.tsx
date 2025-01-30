@@ -4,6 +4,8 @@ import Products from "../pages/admin/Products";
 import { publicPaths } from "./public.routes";
 import UpdateProduct from "../pages/admin/UpdateProduct";
 import ProductDetail from "../pages/admin/ProductDetail";
+import UserProfile from "../pages/public/UserProfile";
+import Orders from "../pages/admin/Orders";
 
 export const adminPaths = [
     ...publicPaths,
@@ -39,13 +41,13 @@ export const adminPaths = [
             {
                 name: "Orders",
                 path: "/admin/dashboard/orders",
-                element: <div>Orders Page</div>,
+                element: <Orders />,
                 visible: false,
             },
             {
                 name: "Orders",
                 path: "/admin/dashboard/profile",
-                element: <div>Profile Page</div>,
+                element: <UserProfile />,
                 visible: false,
             },
         ],

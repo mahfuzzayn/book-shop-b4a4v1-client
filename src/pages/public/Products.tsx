@@ -224,14 +224,14 @@ const Products = () => {
                         </label>
                         <div className="flex flex-col gap-y-2">
                             <Checkbox
-                                value={true} // In Stock
+                                value={true}
                                 checked={availability === true}
                                 onChange={onAvailabilityChange}
                             >
                                 In Stock
                             </Checkbox>
                             <Checkbox
-                                value={false} // Out of Stock
+                                value={false}
                                 checked={availability === false}
                                 onChange={onAvailabilityChange}
                             >

@@ -4,6 +4,7 @@ import {
     Flex,
     Modal,
     Pagination,
+    Spin,
     Table,
     TableColumnsType,
     TableProps,
@@ -70,6 +71,7 @@ const Products = () => {
         data: productsData,
         isLoading,
         isFetching,
+        isError,
     } = useGetAllProductsQuery([
         { name: "limit", value: 5 },
         { name: "page", value: page },
@@ -148,9 +150,26 @@ const Products = () => {
         }
     };
 
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
+    if (isLoading)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+
+    if (isError)
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                <h2 className="text-2xl font-semibold">
+                    Failed to load your Orders
+                </h2>
+                <Link to="/admin/dashboard">
+                    <Button type="primary" className="!bg-primary">
+                        Back to Dashboard
+                    </Button>
+                </Link>
+            </div>
+        );
 
     return (
         <>
