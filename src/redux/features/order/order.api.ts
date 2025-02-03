@@ -1,3 +1,4 @@
+import { TOrder, TQueryParam, TResponseRedux } from "../../../types";
 import { baseApi } from "../../api/baseApi";
 
 const paymentApi = baseApi.injectEndpoints({
@@ -18,10 +19,27 @@ const paymentApi = baseApi.injectEndpoints({
             invalidatesTags: ["products", "orders"],
         }),
         getUserOrders: builder.query({
-            query: (userId) => ({
-                url: `/orders/${userId}`,
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+
+                if (args) {
+                    args.params.forEach((item: TQueryParam) => {
+                        params.append(item.name, item.value as string);
+                    });
+                }
+
+                return {
+                    url: `/orders/${args.userId}`,
+                    method: "GET",
+                    params,
+                };
+            },
+            transformResponse: (response: TResponseRedux<TOrder[]>) => {
+                return {
+                    data: response.data,
+                    meta: response.meta,
+                };
+            },
             providesTags: ["orders"],
         }),
         updateOrderStatusByUser: builder.mutation({

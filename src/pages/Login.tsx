@@ -50,11 +50,39 @@ export default function Login() {
                 navigate("/");
             }
         } catch (error) {
-            toast.error("Something went wrong", {
-                id: toastId,
-                duration: 2000,
-                style: toastStyles.error,
-            });
+            if (error?.data?.message === "User is deactivated!") {
+                toast.error("You have been deactivated", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else if (error?.data?.message === "User password is wrong") {
+                toast.error("The password you entered is incorrect", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else if (error?.data?.message === "User not found!") {
+                toast.error("No user found with this email", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else if (
+                error?.data?.err?.issues[0].message === "Invalid email format"
+            ) {
+                toast.error("Invalid email format", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else {
+                toast.error("Something went wrong", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            }
         }
     };
 

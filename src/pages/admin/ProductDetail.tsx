@@ -1,18 +1,11 @@
 import { Link, useParams } from "react-router-dom";
-import { Button, Descriptions, Divider, Image } from "antd";
+import { Button, Descriptions, Divider, Image, Spin } from "antd";
 import { useGetSingleProductQuery } from "../../redux/features/admin/productManagement.api";
-
-type TApiError = {
-    data: {
-        message: string;
-    };
-    status: number;
-};
+import { ArrowLeftOutlined, ArrowRightOutlined } from "@ant-design/icons";
 
 const ProductDetail = () => {
     const { productId } = useParams();
-    const { data, isLoading, isError, error } =
-        useGetSingleProductQuery(productId);
+    const { data, isLoading, isError } = useGetSingleProductQuery(productId);
 
     const pData = data?.data;
 
@@ -27,21 +20,41 @@ const ProductDetail = () => {
           }
         : null;
 
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
+    if (isLoading)
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
 
-    if (isError) {
-        return <p>Error: {(error as TApiError).data.message}</p>;
-    }
+    if (isError)
+        return (
+            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                <h2 className="text-2xl font-semibold">
+                    Failed to load product detail
+                </h2>
+                <p>Product ID: {productId}</p>
+                <Link to="/admin/dashboard/products">
+                    <Button type="primary" className="!bg-primary">
+                        Back to Products
+                    </Button>
+                </Link>
+            </div>
+        );
 
     return (
-        <>
-            <h1 className="text-3xl text-center mt-10 font-extrabold">
+        <div className="p-6">
+            <Link to="/admin/dashboard/products">
+                <Button type="primary" className="!bg-primary">
+                    <ArrowLeftOutlined />
+                    Products
+                </Button>
+            </Link>
+            <h1 className="text-2xl sm:text-3xl text-center mt-10 font-extrabold">
                 Details of {pData?.title}
             </h1>
-            <Divider className="!text-xl">Product Info</Divider>
-            <Descriptions size="middle" className="!mx-5">
+            <Divider className="!text-xl !my-5">Product Info</Divider>
+            <Descriptions size="middle">
                 {productInfo &&
                     Object.entries(productInfo).map(([item, value]) => (
                         <Descriptions.Item label={item} key={item}>
@@ -49,24 +62,30 @@ const ProductDetail = () => {
                         </Descriptions.Item>
                     ))}
             </Descriptions>
-            <div className="font-bold mx-5 mt-5">
+            <div className="mt-5 text-[#00000073]">
                 Description:
-                <span className="ml-1 font-normal">{pData.description}</span>
+                <span className="ml-1 font-normal text-black">
+                    {pData.description}
+                </span>
                 <br />
             </div>
-            <div className="flex flex-col font-bold mx-5 mt-5">
+            <div className="flex flex-col text-xl font-bold mt-10">
                 Image
-                <Image
-                    src={pData?.image}
-                    alt={`${pData?.title} - Book Image`}
-                    width={280}
-                    className="max-w-[240px] w-full rounded-xl mt-5 mx-5"
-                />
+                <div className="mx-2 sm:mx-5">
+                    <Image
+                        src={pData?.image}
+                        alt={`${pData?.title} - Book Image`}
+                        width={240}
+                        className="max-w-[240px] w-full rounded-xl mt-5"
+                    />
+                </div>
             </div>
-            <Button type="primary" className="!block !bg-primary mt-12 mx-5">
-                <Link to="/admin/dashboard/products">Go back to Products</Link>
-            </Button>
-        </>
+            <Link to={`/admin/dashboard/products/update/${pData._id}`}>
+                <Button type="primary" className="!bg-dark mt-10">
+                    Update this product <ArrowRightOutlined />
+                </Button>
+            </Link>
+        </div>
     );
 };
 

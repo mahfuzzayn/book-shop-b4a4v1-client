@@ -1,12 +1,30 @@
+import { TOrder, TQueryParam, TResponseRedux } from "../../../types";
 import { baseApi } from "../../api/baseApi";
 
 const orderManagementApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getAllOrders: builder.query({
-            query: () => ({
-                url: `/orders/`,
-                method: "GET",
-            }),
+            query: (args) => {
+                const params = new URLSearchParams();
+
+                if (args) {
+                    args.forEach((item: TQueryParam) => {
+                        params.append(item.name, item.value as string);
+                    });
+                }
+
+                return {
+                    url: `/orders/`,
+                    method: "GET",
+                    params,
+                };
+            },
+            transformResponse: (response: TResponseRedux<TOrder[]>) => {
+                return {
+                    data: response.data,
+                    meta: response.meta,
+                };
+            },
             providesTags: ["orders"],
         }),
         updateOrderStatusByAdmin: builder.mutation({

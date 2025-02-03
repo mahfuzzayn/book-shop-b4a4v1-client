@@ -6,6 +6,7 @@ import UpdateProduct from "../pages/admin/UpdateProduct";
 import ProductDetail from "../pages/admin/ProductDetail";
 import UserProfile from "../pages/public/UserProfile";
 import Orders from "../pages/admin/Orders";
+import CreateProduct from "../pages/admin/CreateProduct";
 
 export const adminPaths = [
     ...publicPaths,
@@ -24,6 +25,12 @@ export const adminPaths = [
                 name: "Products",
                 path: "/admin/dashboard/products",
                 element: <Products />,
+                visible: false,
+            },
+            {
+                name: "Create Product",
+                path: "/admin/dashboard/products/create-product",
+                element: <CreateProduct />,
                 visible: false,
             },
             {

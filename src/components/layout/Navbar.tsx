@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Layout, Menu, Button, ConfigProvider } from "antd";
+import { Layout, Menu, Button } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/userManagement.types";
@@ -9,6 +9,11 @@ import { logout, useCurrentToken } from "../../redux/features/auth/authSlice";
 import { adminPaths } from "../../routes/admin.routes";
 import { Link } from "react-router-dom";
 import { publicPaths } from "../../routes/public.routes";
+import { useState } from "react";
+import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
+import { toast } from "sonner";
+import { toastStyles } from "../../constants/toaster";
+
 const { Header } = Layout;
 
 const userRole = {
@@ -27,6 +32,7 @@ const theme = {
 const Navbar = () => {
     const token = useAppSelector(useCurrentToken);
     const dispatch = useAppDispatch();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     let user;
 
@@ -37,6 +43,15 @@ const Navbar = () => {
             dispatch(logout());
         }
     }
+
+    const handleLogout = () => {
+        dispatch(logout());
+
+        toast.success("User logged out successfully", {
+            duration: 2000,
+            style: toastStyles.success,
+        });
+    };
 
     let navbarItems: any;
 
@@ -52,57 +67,93 @@ const Navbar = () => {
             break;
     }
 
+    console.log(navbarItems);
+
     return (
         <Layout>
-            <Header
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    padding: "0 20px",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-                }}
-                className="!bg-accent"
-            >
+            <Header className="!bg-accent shadow-md px-5 md:px-10 flex justify-between items-center relative">
                 {/* Logo */}
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <h2 className="text-2xl font-extrabold">
-                        <Link to="/" className="!text-primary">
-                            Book <span className="!text-dark">Shop</span>
+                <h2 className="text-2xl font-extrabold">
+                    <Link to="/" className="!text-primary">
+                        Book <span className="!text-dark">Shop</span>
+                    </Link>
+                </h2>
+
+                {/* Desktop Navigation */}
+                <div className="hidden md:flex items-center space-x-6">
+                    {navbarItems.map((item: any) => (
+                        <Link
+                            key={item.key}
+                            to={item.path}
+                            className="font-semibold hover:text-primary transition"
+                        >
+                            {item.label}
                         </Link>
-                    </h2>
-                </div>
-                {/* Navigation Links */}
-                <ConfigProvider theme={theme}>
-                    <Menu
-                        mode="horizontal"
-                        style={{
-                            flex: 1,
-                            justifyContent: "flex-end",
-                            borderBottom: "none",
-                        }}
-                        className="!bg-accent font-semibold"
-                        selectable={false}
-                        items={navbarItems}
-                    ></Menu>
-                </ConfigProvider>
-                {!user ? (
-                    <Link to="/login">
+                    ))}
+                    {!user ? (
+                        <Link to="/login">
+                            <Button
+                                type="primary"
+                                className="!bg-primary font-semibold"
+                            >
+                                Login
+                            </Button>
+                        </Link>
+                    ) : (
                         <Button
                             type="primary"
-                            className="!bg-primary !font-semibold"
+                            className="!bg-secondary font-semibold"
+                            onClick={() => handleLogout()}
                         >
-                            Login
+                            Logout
                         </Button>
-                    </Link>
-                ) : (
-                    <Button
-                        type="primary"
-                        className="!bg-secondary !font-semibold"
-                        onClick={() => dispatch(logout())}
-                    >
-                        Logout
-                    </Button>
+                    )}
+                </div>
+
+                {/* Hamburger Menu Button (Small Screens) */}
+                <button
+                    className="md:hidden text-2xl"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                    {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
+                </button>
+                {/* Mobile Menu */}
+                {isMenuOpen && (
+                    <div className="absolute top-full left-0 w-full bg-light shadow-lg rounded-md flex flex-col items-center p-2 z-50 md:hidden">
+                        {/* Navigation Links */}
+                        <Menu
+                            mode="vertical"
+                            className="!bg-accent w-full text-center rounded-lg"
+                            selectable={false}
+                            items={navbarItems}
+                            onClick={() => setIsMenuOpen(false)} // Auto-close menu on click
+                        />
+                        {/* Authentication Buttons (Mobile) */}
+                        {!user ? (
+                            <Link
+                                to="/login"
+                                className="w-full text-center my-2"
+                            >
+                                <Button
+                                    type="primary"
+                                    className="!bg-primary font-semibold w-full rounded-full py-2"
+                                >
+                                    Login
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Button
+                                type="primary"
+                                className="!bg-secondary font-semibold w-full rounded-full py-2 my-2"
+                                onClick={() => {
+                                    dispatch(logout());
+                                    setIsMenuOpen(false);
+                                }}
+                            >
+                                Logout
+                            </Button>
+                        )}
+                    </div>
                 )}
             </Header>
         </Layout>

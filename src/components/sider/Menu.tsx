@@ -2,8 +2,6 @@ import Item from "antd/es/list/Item";
 import { Link } from "react-router-dom";
 
 const Menu = ({ items }) => {
-    console.log(items);
-
     return (
         <ul>
             {items.map((item) => (

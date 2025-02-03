@@ -17,7 +17,7 @@ import {
 } from "../../redux/features/admin/userManagement.api";
 import { TUser } from "../../types/userManagement.types";
 import { TQueryParam, TResponse } from "../../types";
-import { ExclamationCircleFilled } from "@ant-design/icons";
+import { ArrowLeftOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import { Link } from "react-router-dom";
@@ -109,9 +109,9 @@ const Users = () => {
         isFetching,
         isError,
     } = useGetAllUsersQuery([
-        { name: "limit", value: 10 },
+        { name: "limit", value: 5 },
         { name: "page", value: page },
-        { name: "sort", value: "id" },
+        { name: "sort", value: "-createdAt" },
         ...params,
     ]);
 
@@ -213,9 +213,7 @@ const Users = () => {
     if (isError)
         return (
             <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">
-                    Failed to load your Orders
-                </h2>
+                <h2 className="text-2xl font-semibold">Failed to load Users</h2>
                 <Link to="/admin/dashboard">
                     <Button type="primary" className="!bg-primary">
                         Back to Dashboard
@@ -225,13 +223,24 @@ const Users = () => {
         );
 
     return (
-        <>
+        <div className="p-6">
+            <div className="flex flex-col sm:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                <Link to="/admin/dashboard">
+                    <Button type="primary" className="!bg-primary">
+                        <ArrowLeftOutlined />
+                        Dashboard
+                    </Button>
+                </Link>
+                <h2 className="text-3xl !font-bold">Users</h2>
+            </div>
             <Table
                 loading={isFetching}
                 columns={columns}
                 dataSource={tableData}
                 onChange={onChange}
                 pagination={false}
+                className="mt-10"
+                scroll={{ x: "max-content" }}
             />
             <Flex justify="center" style={{ marginTop: "10px" }}>
                 <Pagination
@@ -241,7 +250,7 @@ const Users = () => {
                     total={metaData?.total}
                 />
             </Flex>
-        </>
+        </div>
     );
 };
 

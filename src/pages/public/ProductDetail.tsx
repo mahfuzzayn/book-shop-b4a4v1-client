@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { Button, Descriptions, Divider, Image } from "antd";
+import { Button, Descriptions, Divider, Image, Spin } from "antd";
 import { useGetSingleProductQuery } from "../../redux/features/admin/productManagement.api";
 import { useAddItemMutation } from "../../redux/features/cart/cartApi";
 import { useAppSelector } from "../../redux/hook";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { TResponse } from "../../types";
 import { toastStyles } from "../../constants/toaster";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 type TApiError = {
     data: {
@@ -73,21 +74,41 @@ const ProductDetail = () => {
           }
         : null;
 
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
-
-    if (isError) {
-        return <p>Error: {(error as TApiError).data.message}</p>;
-    }
+        if (isLoading)
+            return (
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            );
+    
+        if (isError)
+            return (
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load product detail
+                    </h2>
+                    <p>Product ID: {productId}</p>
+                    <Link to="/admin/dashboard/products">
+                        <Button type="primary" className="!bg-primary">
+                            Back to Products
+                        </Button>
+                    </Link>
+                </div>
+            );
 
     return (
-        <>
-            <h1 className="text-3xl text-center mt-10 font-extrabold">
+        <div className="p-6">
+            <Link to="/products">
+                <Button type="primary" className="!bg-primary">
+                    <ArrowLeftOutlined />
+                    Products
+                </Button>
+            </Link>
+            <h1 className="text-2xl sm:text-3xl text-center mt-10 font-extrabold">
                 Details of {pData?.title}
             </h1>
-            <Divider className="!text-xl">Product Info</Divider>
-            <Descriptions size="middle" className="!mx-5">
+            <Divider className="!text-xl !my-5">Product Info</Divider>
+            <Descriptions size="middle">
                 {productInfo &&
                     Object.entries(productInfo).map(([item, value]) => (
                         <Descriptions.Item label={item} key={item}>
@@ -95,35 +116,32 @@ const ProductDetail = () => {
                         </Descriptions.Item>
                     ))}
             </Descriptions>
-            <div className="font-bold mx-5 mt-5">
+            <div className="mt-5 text-[#00000073]">
                 Description:
-                <span className="ml-1 font-normal">{pData.description}</span>
+                <span className="ml-1 font-normal text-black">
+                    {pData.description}
+                </span>
                 <br />
             </div>
-            <div className="flex flex-col font-bold mx-5 mt-5">
+            <div className="flex flex-col text-xl font-bold mt-10">
                 Image
-                <Image
-                    src={pData?.image}
-                    alt={`${pData?.title} - Book Image`}
-                    width={280}
-                    className="max-w-[240px] w-full rounded-xl mt-5 mx-5"
-                />
+                <div className="mx-2 sm:mx-5">
+                    <Image
+                        src={pData?.image}
+                        alt={`${pData?.title} - Book Image`}
+                        width={240}
+                        className="max-w-[240px] w-full rounded-xl mt-5"
+                    />
+                </div>
             </div>
-            <div className="flex gap-x-4 mx-5">
-                <Link to="/products">
-                    <Button type="primary" className="!block !bg-primary mt-12">
-                        Go back to Products
-                    </Button>
-                </Link>
-                <Button
-                    type="primary"
-                    className="!bg-secondary mt-12"
-                    onClick={() => handleBuyNow(pData._id)}
-                >
-                    Buy Now
-                </Button>
-            </div>
-        </>
+            <Button
+                type="primary"
+                className="!bg-secondary mt-12"
+                onClick={() => handleBuyNow(pData._id)}
+            >
+                Buy Now
+            </Button>
+        </div>
     );
 };
 

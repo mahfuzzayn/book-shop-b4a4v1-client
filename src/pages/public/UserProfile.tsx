@@ -12,7 +12,7 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import { TResponse } from "../../types";
-import { LoadingOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import BSPInput from "../../components/form/BSPInput";
 
@@ -56,7 +56,7 @@ const UserProfile = () => {
         }
 
         if (Object.keys(userData).length === 0) {
-            toast.error("No changes detected", {
+            toast.error("No changes were made to the profile", {
                 id: toastId,
                 style: toastStyles.error,
             });
@@ -116,84 +116,100 @@ const UserProfile = () => {
         );
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
-            <div className="flex flex-col items-center gap-y-2">
-                <div className="bg-primary text-accent p-3 px-5 rounded-full max-w-[60px] text-2xl">
-                    {userData?.name?.slice(0, 1)}
-                </div>
-                <h2 className="text-3xl font-bold">
-                    {userData?.name}'s Profile
+        <div className="p-6">
+            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3  mb-4">
+                <Link to={`/${userData?.role}/dashboard`}>
+                    <Button type="primary" className="!bg-primary">
+                        <ArrowLeftOutlined />
+                        Dashboard
+                    </Button>
+                </Link>
+                <h2 className="text-2xl md:text-3xl !font-bold">
+                    User Profile
                 </h2>
-                <Row className="mx-5 mt-10">
-                    <Col span={24}>
-                        <BSForm
-                            onSubmit={onSubmit}
-                            defaultValues={userDefaultValues}
-                        >
-                            <Row gutter={8}>
-                                <Col
-                                    span={24}
-                                    md={{ span: 12 }}
-                                    lg={{ span: 24 }}
-                                >
-                                    <BSInput
-                                        type="text"
-                                        name="name"
-                                        label="Name"
-                                    />
-                                </Col>
-                                <Col
-                                    span={24}
-                                    md={{ span: 12 }}
-                                    lg={{ span: 24 }}
-                                >
-                                    <BSInput
-                                        type="text"
-                                        name="email"
-                                        label="Email"
-                                        disabled
-                                    />
-                                </Col>
-                            </Row>
-                            <Row gutter={8}>
-                                <Col
-                                    span={24}
-                                    md={{ span: 12 }}
-                                    lg={{ span: 12 }}
-                                >
-                                    <BSPInput
-                                        type="password"
-                                        name="oldPassword"
-                                        label="Old Password"
-                                    />
-                                </Col>
-                                <Col
-                                    span={24}
-                                    md={{ span: 12 }}
-                                    lg={{ span: 12 }}
-                                >
-                                    <BSPInput
-                                        type="password"
-                                        name="newPassword"
-                                        label="New Password"
-                                    />
-                                </Col>
-                            </Row>
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                className="!bg-primary"
+            </div>
+            <div className="flex justify-center items-center min-h-screen my-20">
+                <div className="flex flex-col items-center gap-y-2">
+                    <div className="bg-primary text-accent p-3 px-5 rounded-full max-w-[60px] text-2xl">
+                        {userData?.name?.slice(0, 1)}
+                    </div>
+                    <h2 className="text-2xl md:text-3xl !font-bold">
+                        Hello, {userData?.name}
+                    </h2>
+                    <Row className="mt-8">
+                        <Col span={24}>
+                            <BSForm
+                                onSubmit={onSubmit}
+                                defaultValues={userDefaultValues}
                             >
-                                Update
-                            </Button>
-                            <p className="mt-4 text-xs">
-                                You can only update{" "}
-                                <span className="text-primary">name</span> and{" "}
-                                <span className="text-primary">password</span>
-                            </p>
-                        </BSForm>
-                    </Col>
-                </Row>
+                                <Row gutter={8}>
+                                    <Col
+                                        span={24}
+                                        md={{ span: 12 }}
+                                        lg={{ span: 24 }}
+                                    >
+                                        <BSInput
+                                            type="text"
+                                            name="name"
+                                            label="Name"
+                                        />
+                                    </Col>
+                                    <Col
+                                        span={24}
+                                        md={{ span: 12 }}
+                                        lg={{ span: 24 }}
+                                    >
+                                        <BSInput
+                                            type="text"
+                                            name="email"
+                                            label="Email"
+                                            disabled
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row gutter={8}>
+                                    <Col
+                                        span={24}
+                                        md={{ span: 12 }}
+                                        lg={{ span: 12 }}
+                                    >
+                                        <BSPInput
+                                            type="password"
+                                            name="oldPassword"
+                                            label="Old Password"
+                                        />
+                                    </Col>
+                                    <Col
+                                        span={24}
+                                        md={{ span: 12 }}
+                                        lg={{ span: 12 }}
+                                    >
+                                        <BSPInput
+                                            type="password"
+                                            name="newPassword"
+                                            label="New Password"
+                                        />
+                                    </Col>
+                                </Row>
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    className="!bg-primary"
+                                >
+                                    Update
+                                </Button>
+                                <p className="mt-4 text-xs">
+                                    You can only update{" "}
+                                    <span className="text-primary">name</span>{" "}
+                                    and{" "}
+                                    <span className="text-primary">
+                                        password
+                                    </span>
+                                </p>
+                            </BSForm>
+                        </Col>
+                    </Row>
+                </div>
             </div>
         </div>
     );

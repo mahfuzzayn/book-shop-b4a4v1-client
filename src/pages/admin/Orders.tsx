@@ -1,6 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Table, Select, Spin, Tag, Button, Modal } from "antd";
+import {
+    Table,
+    Select,
+    Spin,
+    Tag,
+    Button,
+    Modal,
+    Flex,
+    Pagination,
+    TableProps,
+} from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
@@ -15,7 +25,18 @@ import {
     useGetAllOrdersQuery,
     useUpdateOrderStatusByAdminMutation,
 } from "../../redux/features/admin/orderManagment.api";
-import { TResponse } from "../../types";
+import { TOrder, TProduct, TQueryParam, TResponse } from "../../types";
+
+type TTableData = Pick<
+    TOrder,
+    | "_id"
+    | "items"
+    | "total"
+    | "userId"
+    | "transactionId"
+    | "status"
+    | "createdAt"
+>;
 
 const statusColors: Record<string, string> = {
     pending: "gold",
@@ -34,11 +55,23 @@ const validStatusTransitions: Record<string, string[]> = {
 };
 
 const Orders = () => {
+    const [params, setParams] = useState<TQueryParam[]>([]);
+    const [page, setPage] = useState(1);
+
     const {
-        data: orders,
+        data: ordersData,
         isLoading,
+        isFetching,
         isError,
-    } = useGetAllOrdersQuery(undefined);
+    } = useGetAllOrdersQuery([
+        { name: "limit", value: 5 },
+        { name: "page", value: page },
+        { name: "sort", value: "-createdAt" },
+        ...params,
+    ]);
+
+    const metaData = ordersData?.meta;
+
     const [updateOrderStatus] = useUpdateOrderStatusByAdminMutation(undefined);
     const [deleteOrder] = useDeleteOrderMutation();
     const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
@@ -113,6 +146,26 @@ const Orders = () => {
         });
     };
 
+    const onChange: TableProps<TTableData>["onChange"] = (
+        pagination,
+        filters,
+        sorter,
+        extra
+    ) => {
+        if (extra.action === "filter") {
+            const queryParams: TQueryParam[] = [];
+
+            filters.name?.forEach((item) =>
+                queryParams.push({ name: "name", value: item })
+            );
+            filters.year?.forEach((item) =>
+                queryParams.push({ name: "year", value: item })
+            );
+
+            setParams(queryParams);
+        }
+    };
+
     if (isLoading)
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -135,6 +188,14 @@ const Orders = () => {
         );
 
     const columns = [
+        {
+            title: "No.",
+            dataIndex: "serial",
+            key: "serial",
+            render: (_: any, __: any, index: number) => (
+                <span>{index + 1}</span>
+            ),
+        },
         {
             title: "Order ID",
             dataIndex: "_id",
@@ -223,16 +284,34 @@ const Orders = () => {
     ];
 
     return (
-        <div className="p-8">
-            <div className="flex items-center gap-x-3 mb-4">
-                <Link to="/products">
+        <div className="p-6">
+            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                <Link to="/admin/dashboard">
                     <Button type="primary" className="!bg-primary">
-                        <ArrowLeftOutlined /> Products
+                        <ArrowLeftOutlined />
+                        Dashboard
                     </Button>
                 </Link>
                 <h2 className="text-3xl !font-bold">Orders</h2>
             </div>
-            <Table dataSource={orders?.data} columns={columns} rowKey="_id" />
+            <Table
+                loading={isFetching}
+                dataSource={ordersData?.data}
+                columns={columns}
+                onChange={onChange}
+                pagination={false}
+                rowKey="_id"
+                className="mt-10"
+                scroll={{ x: "max-content" }}
+            />
+            <Flex justify="center" style={{ marginTop: "10px" }}>
+                <Pagination
+                    current={page}
+                    onChange={(value) => setPage(value)}
+                    pageSize={metaData?.limit}
+                    total={metaData?.total}
+                />
+            </Flex>
         </div>
     );
 };

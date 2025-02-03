@@ -12,7 +12,11 @@ import {
 import { useState } from "react";
 import { TUser } from "../../types/userManagement.types";
 import { TProduct, TQueryParam, TResponse } from "../../types";
-import { ExclamationCircleFilled } from "@ant-design/icons";
+import {
+    ArrowLeftOutlined,
+    ArrowRightOutlined,
+    ExclamationCircleFilled,
+} from "@ant-design/icons";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import {
@@ -56,7 +60,7 @@ const Products = () => {
                             style: toastStyles.loading,
                         });
                     } else {
-                        toast.success("Deleted product", { id: toastId });
+                        toast.success("Product deleted", { id: toastId });
                     }
                 } catch (error) {
                     toast.error("Something went wrong", {
@@ -172,15 +176,31 @@ const Products = () => {
         );
 
     return (
-        <>
+        <div className="p-6">
+            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                <Link to="/admin/dashboard">
+                    <Button type="primary" className="!bg-primary">
+                        <ArrowLeftOutlined />
+                        Dashboard
+                    </Button>
+                </Link>
+                <h2 className="text-3xl !font-bold">Products</h2>
+                <Link to="create-product">
+                    <Button type="primary" className="!bg-secondary">
+                        Create Product <ArrowRightOutlined />
+                    </Button>
+                </Link>
+            </div>
             <Table
                 loading={isFetching}
                 columns={columns}
                 dataSource={tableData}
                 onChange={onChange}
                 pagination={false}
+                className="mt-10"
+                scroll={{ x: "max-content" }}
             />
-            <Flex justify="center" style={{ marginTop: "10px" }}>
+            <Flex justify="center" className="!mt-5 !my-10">
                 <Pagination
                     current={page}
                     onChange={(value) => setPage(value)}
@@ -188,7 +208,7 @@ const Products = () => {
                     total={metaData?.total}
                 />
             </Flex>
-        </>
+        </div>
     );
 };
 

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import BSInput from "../components/form/BSInput";
 import BSForm from "../components/form/BSForm";
 import BSPInput from "../components/form/BSPInput";
+import { toastStyles } from "../constants/toaster";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -20,7 +21,9 @@ export default function Register() {
     const [register] = useRegisterUserMutation();
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const toastId = toast.loading("Registering...");
+        const toastId = toast.loading("Registering...", {
+            style: toastStyles.loading,
+        });
 
         const userData = {
             user: { ...data },
@@ -33,19 +36,38 @@ export default function Register() {
                 toast.error("Failed to register user", {
                     id: toastId,
                     duration: 2000,
+                    style: toastStyles.error,
                 });
             } else {
                 toast.success("User registered successfully", {
                     id: toastId,
                     duration: 2000,
+                    style: toastStyles.success,
                 });
                 navigate("/login");
             }
         } catch (error) {
-            toast.error("Something went wrong", {
-                id: toastId,
-                duration: 2000,
-            });
+            if (error?.data?.err?.code === 11000) {
+                toast.error("An account with this email already exists", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else if (
+                error?.data?.err?.issues[0].message === "Invalid email format"
+            ) {
+                toast.error("Invalid email format", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            } else {
+                toast.error("Something went wrong", {
+                    id: toastId,
+                    duration: 2000,
+                    style: toastStyles.error,
+                });
+            }
         }
     };
 
@@ -66,7 +88,7 @@ export default function Register() {
                     <h5>
                         Already have an Account?{" "}
                         <span>
-                            <Link to="/login" className="!text-dark">
+                            <Link to="/login" className="!text-secondary">
                                 Login
                             </Link>
                         </span>
@@ -81,7 +103,7 @@ export default function Register() {
                     <h5 className="text-center mt-10">
                         Back to{" "}
                         <span>
-                            <Link to="/" className="!text-dark">
+                            <Link to="/" className="!text-secondary">
                                 Home
                             </Link>
                         </span>

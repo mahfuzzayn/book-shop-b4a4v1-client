@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TQueryParam, TResponse } from "../../types";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
@@ -10,7 +10,11 @@ import {
 } from "../../redux/features/admin/productManagement.api";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Image, Select, Slider, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import {
+    CloseOutlined,
+    LoadingOutlined,
+    MenuOutlined,
+} from "@ant-design/icons";
 import { productCategories } from "../../constants/product";
 import { useAddItemMutation } from "../../redux/features/cart/cartApi";
 import { useAppSelector } from "../../redux/hook";
@@ -22,9 +26,30 @@ const Products = () => {
     const [availability, setAvailability] = useState<boolean | undefined>(
         undefined
     );
+    const [isOpen, setIsOpen] = useState(false);
     const user = useAppSelector(selectCurrentUser);
     const [addItem] = useAddItemMutation();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(min-width: 1024px)");
+
+        const handleResize = () => {
+            if (mediaQuery.matches) {
+                setIsOpen(true);
+            } else {
+                setIsOpen(false);
+            }
+        };
+
+        handleResize();
+
+        mediaQuery.addEventListener("change", handleResize);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleResize);
+        };
+    }, []);
 
     const handleBuyNow = async (productId: string) => {
         const itemData = {
@@ -35,12 +60,45 @@ const Products = () => {
             },
         };
 
+        if (!user) {
+            navigate("/login");
+
+            toast.warning("Login first to buy a product", {
+                style: toastStyles.success,
+            });
+
+            return;
+        }
+
+        if (user?.role !== "user") {
+            toast.warning("You cannot buy a product as an admin", {
+                style: toastStyles.success,
+            });
+
+            return;
+        }
+
         const toastId = toast.loading("Adding to cart...");
 
         try {
             const res = (await addItem(itemData)) as TResponse<any>;
 
-            if (res.error) {
+            if (res.error && !user) {
+                navigate("/login");
+
+                toast.warning("Login first to buy a product", {
+                    id: toastId,
+                    style: toastStyles.success,
+                });
+            } else if (
+                res.error?.data.message === "You are not authorized!" &&
+                user?.role !== "user"
+            ) {
+                toast.warning("You cannot buy a product as an admin", {
+                    id: toastId,
+                    style: toastStyles.success,
+                });
+            } else if (res.error) {
                 toast.error(res.error.data.message, {
                     id: toastId,
                     style: toastStyles.error,
@@ -175,7 +233,31 @@ const Products = () => {
 
     return (
         <div className="flex">
-            <div className="w-1/4 max-w-[320px] p-4 border-primary border-r">
+            {/* Hamburger Button */}
+            <div
+                className={`${
+                    isOpen ? "hidden" : "fixed"
+                } lg:hidden fixed top-16 left-0 bg-primary z-1 text-white p-2 rounded-md shadow-md cursor-pointer flex`}
+                onClick={() => setIsOpen(true)}
+            >
+                <div className="flex gap-x-2 items-center">
+                    <MenuOutlined className="text-lg relative top-[-1px]" />
+                    <p className="font-semibold">Filters</p>
+                </div>
+            </div>
+            {/*  Sidebar & Close Button  */}
+            <div
+                className={`${
+                    isOpen ? "fixed" : "hidden"
+                } top-0 lg:static min-h-screen w-[260px] sm:w-[320px] overflow-hidden border-primary border-r-1 p-4 z-10 bg-accent lg:bg-transparent`}
+            >
+                {/* Close Button */}
+                <button
+                    className="lg:hidden fixed top-1 left-[220px] sm:left-[280px] z-50 bg-primary text-white p-2 rounded-md shadow-md cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <CloseOutlined className="text-xl" />
+                </button>
                 <h2 className="text-lg font-bold mb-4 text-secondary">
                     Filters
                 </h2>
@@ -241,6 +323,7 @@ const Products = () => {
                     </div>
                 </div>
             </div>
+
             {!isLoading && !isFetching ? (
                 <div className="flex-1 p-5">
                     <div
