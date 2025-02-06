@@ -5,11 +5,13 @@ import {
     useRemoveItemMutation,
     useClearCartMutation,
 } from "../../redux/features/cart/cartApi";
-import { Button, Card, Typography, Space, Spin, Image } from "antd";
+import { Button, Card, Typography, Space, Spin, Image, Divider } from "antd";
 import {
     ArrowLeftOutlined,
+    CloseOutlined,
     MinusOutlined,
     PlusOutlined,
+    ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { useAppSelector } from "../../redux/hook";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
@@ -20,7 +22,7 @@ import { Link } from "react-router-dom";
 import { useCreatePaymentIntentMutation } from "../../redux/features/order/order.api";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentForm from "./PaymentForm";
 import config from "../../config";
 
@@ -44,6 +46,27 @@ const CheckoutPage = () => {
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [isPaymentPrepared, setIsPaymentPrepared] = useState(false);
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(min-width: 1024px)");
+
+        const handleResize = () => {
+            if (mediaQuery.matches) {
+                setIsOpen(true);
+            } else {
+                setIsOpen(false);
+            }
+        };
+
+        handleResize();
+
+        mediaQuery.addEventListener("change", handleResize);
+
+        return () => {
+            mediaQuery.removeEventListener("change", handleResize);
+        };
+    }, []);
 
     const handleUpdateQuantity = async (
         productId: string,
@@ -151,8 +174,11 @@ const CheckoutPage = () => {
                     </Link>
                     Cart
                 </Title>
+                <Divider className="!my-10">
+                    Total Items in your Cart: {cart?.data?.totalItems}
+                </Divider>
                 {cart?.data?.items?.length === 0 ? (
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold mt-10">
                         No items in your cart.
                     </h2>
                 ) : (
@@ -165,12 +191,13 @@ const CheckoutPage = () => {
                                     onClick={() =>
                                         handleRemoveItem(item.productId)
                                     }
-                                    type="link"
-                                    className="!text-dark"
+                                    type="primary"
+                                    className="!text-white !bg-dark"
                                 >
                                     Remove
                                 </Button>
                             }
+                            className="!bg-accent max-w-[300px] md:max-w-[480px]"
                             style={{ marginBottom: 20 }}
                         >
                             <div className="flex flex-col gap-y-3">
@@ -229,7 +256,30 @@ const CheckoutPage = () => {
                     ))
                 )}
             </div>
-            <div className="cart-summary w-72 p-4 bg-accent rounded shadow-md">
+            {/* Hamburger Button */}
+            <div
+                className={`${
+                    isOpen ? "hidden" : "fixed"
+                } lg:hidden fixed top-9 right-0 bg-primary z-1 text-white p-2 rounded-md shadow-md cursor-pointer flex`}
+                onClick={() => setIsOpen(true)}
+            >
+                <p className="font-semibold">Checkout</p>
+                <div className="flex gap-x-2 items-center">
+                    <ShoppingCartOutlined className="text-lg relative top-[-1px]" />
+                </div>
+            </div>
+            <div
+                className={`${
+                    isOpen ? "fixed" : "hidden"
+                } lg:relative top-0 right-0 h-full cart-summary w-72 p-4 bg-accent rounded shadow-md`}
+            >
+                {/* Close Button */}
+                <button
+                    className="lg:hidden absolute right-4 bg-primary text-white p-2 rounded-md shadow-md cursor-pointer"
+                    onClick={() => setIsOpen(false)}
+                >
+                    <CloseOutlined className="text-xl" />
+                </button>
                 <p className="!text-2xl font-bold">Subtotal</p>
                 <div className="flex flex-col gap-y-2 my-4">
                     {cart?.data?.items?.map((item, index) => (
@@ -268,7 +318,7 @@ const CheckoutPage = () => {
                     <Elements stripe={stripePromise} options={{ clientSecret }}>
                         <PaymentForm
                             clearCart={clearCart}
-                            userId={user?.userId}
+                            userId={user?.userId as string}
                             cartItems={cart?.data?.items}
                             clientSecret={clientSecret}
                             setClientSecret={setClientSecret}

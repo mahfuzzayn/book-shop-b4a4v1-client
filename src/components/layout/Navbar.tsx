@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Image } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/userManagement.types";
@@ -13,6 +13,7 @@ import { useState } from "react";
 import { MenuOutlined, CloseOutlined } from "@ant-design/icons";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
+import bookShopLogo from "../../assets/images/logo.png";
 
 const { Header } = Layout;
 
@@ -67,15 +68,20 @@ const Navbar = () => {
             break;
     }
 
-    console.log(navbarItems);
+    // console.log(navbarItems);
 
     return (
         <Layout>
             <Header className="!bg-accent shadow-md px-5 md:px-10 flex justify-between items-center relative">
                 {/* Logo */}
                 <h2 className="text-2xl font-extrabold">
-                    <Link to="/" className="!text-primary">
-                        Book <span className="!text-dark">Shop</span>
+                    <Link
+                        to="/"
+                        className="flex items-center gap-x-1 !text-primary"
+                    >
+                        <Image src={bookShopLogo} width={50} preview={false} />
+                        Book
+                        <span className="!text-dark">Shop</span>
                     </Link>
                 </h2>
 

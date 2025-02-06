@@ -330,9 +330,10 @@ const Products = () => {
                         style={{
                             display: "grid",
                             gridTemplateColumns:
-                                "repeat(auto-fit, minmax(250px, 1fr))",
+                                "repeat(auto-fit, minmax(320px, 1fr))",
                             gap: "20px",
                         }}
+                        className="justify-items-center"
                     >
                         {tableData?.map((product) => (
                             <div
@@ -344,11 +345,11 @@ const Products = () => {
                                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                                     backgroundColor: "#fff",
                                 }}
-                                className="flex flex-col gap-y-2"
+                                className="flex flex-col gap-y-2 w-[260px] sm:w-[320px]"
                             >
                                 <Image
                                     src={product.image}
-                                    className="!h-[240px] !w-[360px]"
+                                    className="!h-[240px] object-contain sm:object-cover"
                                 />
                                 <h3 className="text-xl font-bold">
                                     {product.title}
@@ -400,7 +401,7 @@ const Products = () => {
                         style={{
                             display: "flex",
                             justifyContent: "center",
-                            marginTop: "40px",
+                            marginTop: "50px",
                         }}
                     >
                         <Button
@@ -433,16 +434,8 @@ const Products = () => {
                     </div>
                 </div>
             ) : (
-                <div className="flex justify-center w-full mt-10">
-                    <Spin
-                        indicator={
-                            <LoadingOutlined
-                                style={{ fontSize: 48 }}
-                                className="!text-primary"
-                                spin
-                            />
-                        }
-                    />
+                <div className="flex justify-center items-center min-h-screen w-full">
+                    <Spin size="large" />
                 </div>
             )}
         </div>

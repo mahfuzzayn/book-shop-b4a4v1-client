@@ -1,8 +1,9 @@
 import { Layout } from "antd";
 import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
+import BSFooter from "./Footer";
 
-const { Content, Footer } = Layout;
+const { Content } = Layout;
 
 const MainLayout = () => {
     return (
@@ -14,10 +15,7 @@ const MainLayout = () => {
                         <Outlet />
                     </div>
                 </Content>
-                <Footer style={{ textAlign: "center" }}>
-                    Book Shop ©{new Date().getFullYear()} Created by Mahfuz Zayn
-                    💖
-                </Footer>
+                <BSFooter />
             </Layout>
         </Layout>
     );

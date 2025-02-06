@@ -4,6 +4,12 @@ import Products from "../pages/public/Products";
 
 export const publicPaths = [
     {
+        name: "Home",
+        path: "",
+        element: <h1>Home</h1>,
+        isPublic: true,
+    },
+    {
         name: "Products",
         path: "products",
         element: <Products />,

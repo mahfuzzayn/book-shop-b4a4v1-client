@@ -1,11 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    ShoppingCartOutlined,
+    UserOutlined,
+} from "@ant-design/icons";
+import { Card, Col, Layout, Menu, Row, Statistic } from "antd";
 import { useState } from "react";
-import { adminSidebarPaths } from "../../routes/admin.routes";
 import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
 import { userSidebarPaths } from "../../routes/user.routes";
+import { Content } from "antd/es/layout/layout";
 const { Sider } = Layout;
 
 const userRole = {
@@ -54,7 +59,7 @@ const UserDashboard: React.FC = () => {
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </button>
             </Sider>
-            {/* <Content
+            <Content
                 style={{
                     margin: "16px",
                     padding: "16px",
@@ -62,7 +67,35 @@ const UserDashboard: React.FC = () => {
                     borderRadius: 8,
                 }}
             >
-            </Content> */}
+                {" "}
+                <div className="p-6">
+                    <h2 className="text-2xl font-bold mb-4">
+                        Dashboard Overview
+                    </h2>
+                    <Row gutter={16}>
+                        <Col span={8}>
+                            <Card>
+                                <Statistic
+                                    title="Total Orders"
+                                    value={320}
+                                    valueStyle={{ color: "#1890ff" }}
+                                    prefix={<ShoppingCartOutlined />}
+                                />
+                            </Card>
+                        </Col>
+                        <Col span={8}>
+                            <Card>
+                                <Statistic
+                                    title="Active Users"
+                                    value={1200}
+                                    valueStyle={{ color: "#faad14" }}
+                                    prefix={<UserOutlined />}
+                                />
+                            </Card>
+                        </Col>
+                    </Row>
+                </div>
+            </Content>
         </Layout>
     );
 };
