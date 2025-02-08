@@ -15,6 +15,7 @@ import { productCategories } from "../../constants/product";
 import { useAddItemMutation } from "../../redux/features/cart/cartApi";
 import { useAppSelector } from "../../redux/hook";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
+import { Helmet } from "react-helmet-async";
 
 const Products = () => {
     const [params, setParams] = useState<TQueryParam[]>([]);
@@ -231,11 +232,18 @@ const Products = () => {
 
     return (
         <div className="flex">
+            <Helmet>
+                <title>Products ‣ Book Shop</title>
+                <meta
+                    name="description"
+                    content="Whether you're looking for timeless classics, bestselling novels, or insightful non-fiction, our collection offers something for every book lover."
+                />
+            </Helmet>
             {/* Hamburger Button */}
             <div
                 className={`${
                     isOpen ? "hidden" : "fixed"
-                } lg:hidden fixed top-16 left-0 bg-primary z-1 text-white p-2 rounded-md shadow-md cursor-pointer flex`}
+                } lg:hidden fixed top-16 left-0 bg-primary z-1 text-white p-2 rounded-bl-none rounded-tl-none rounded-md shadow-md cursor-pointer flex`}
                 onClick={() => setIsOpen(true)}
             >
                 <div className="flex gap-x-2 items-center">
@@ -399,7 +407,7 @@ const Products = () => {
                         style={{
                             display: "flex",
                             justifyContent: "center",
-                            marginTop: "50px",
+                            margin: "60px 0",
                         }}
                     >
                         <Button

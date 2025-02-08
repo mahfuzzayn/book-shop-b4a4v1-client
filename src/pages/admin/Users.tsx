@@ -21,6 +21,7 @@ import { ArrowLeftOutlined, ExclamationCircleFilled } from "@ant-design/icons";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 type TTableData = Pick<TUser, "_id" | "name" | "email" | "isDeactivated">;
 
@@ -207,52 +208,84 @@ const Users = () => {
 
     if (isLoading)
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spin size="large" />
-            </div>
+            <>
+                <Helmet>
+                    <title>Users ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing users. View user details, activate or deactivate accounts, and ensure smooth user management."
+                    />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            </>
         );
 
     if (isError)
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">Failed to load Users</h2>
-                <Link to="/admin/dashboard">
-                    <Button type="primary" className="!bg-primary">
-                        Back to Dashboard
-                    </Button>
-                </Link>
-            </div>
+            <>
+                <Helmet>
+                    <title>Users ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing users. View user details, activate or deactivate accounts, and ensure smooth user management."
+                    />
+                </Helmet>
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load Users
+                    </h2>
+                    <Link to="/admin/dashboard">
+                        <Button type="primary" className="!bg-primary">
+                            Back to Dashboard
+                        </Button>
+                    </Link>
+                </div>
+            </>
         );
 
     return (
-        <div className="p-8">
-            <div className="flex flex-col sm:flex-row items-start gap-y-3 gap-x-3 mb-4">
-                <Link to="/admin/dashboard">
-                    <Button type="primary" className="!bg-primary">
-                        <ArrowLeftOutlined />
-                        Dashboard
-                    </Button>
-                </Link>
-                <h2 className="text-3xl !font-bold">Users</h2>
-            </div>
-            <Table
-                loading={isFetching}
-                columns={columns}
-                dataSource={tableData}
-                onChange={onChange}
-                pagination={false}
-                className="mt-10"
-                scroll={{ x: "max-content" }}
-            />
-            <Flex justify="center" style={{ marginTop: "10px" }}>
-                <Pagination
-                    current={page}
-                    onChange={(value) => setPage(value)}
-                    pageSize={metaData?.limit}
-                    total={metaData?.total}
+        <>
+            <Helmet>
+                <title>
+                    Users {usersData ? `(${usersData?.data?.length})` : ""} ‣
+                    Book Shop
+                </title>
+                <meta
+                    name="description"
+                    content="Admin dashboard for managing users. View user details, activate or deactivate accounts, and ensure smooth user management."
                 />
-            </Flex>
-        </div>
+            </Helmet>
+            <div className="p-8 mb-20">
+                <div className="flex flex-col sm:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                    <Link to="/admin/dashboard">
+                        <Button type="primary" className="!bg-primary">
+                            <ArrowLeftOutlined />
+                            Dashboard
+                        </Button>
+                    </Link>
+                    <h2 className="text-3xl !font-bold">Users</h2>
+                </div>
+                <Table
+                    loading={isFetching}
+                    columns={columns}
+                    dataSource={tableData}
+                    onChange={onChange}
+                    pagination={false}
+                    className="mt-10"
+                    scroll={{ x: "max-content" }}
+                />
+                <Flex justify="center" style={{ marginTop: "10px" }}>
+                    <Pagination
+                        current={page}
+                        onChange={(value) => setPage(value)}
+                        pageSize={metaData?.limit}
+                        total={metaData?.total}
+                    />
+                </Flex>
+            </div>
+        </>
     );
 };
 

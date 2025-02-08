@@ -26,6 +26,7 @@ import {
     useUpdateOrderStatusByAdminMutation,
 } from "../../redux/features/admin/orderManagment.api";
 import { TOrder, TQueryParam, TResponse } from "../../types";
+import { Helmet } from "react-helmet-async";
 
 type TTableData = Pick<
     TOrder,
@@ -170,23 +171,41 @@ const Orders = () => {
 
     if (isLoading)
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spin size="large" />
-            </div>
+            <>
+                <Helmet>
+                    <title>Orders ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing orders. View order details, update order statuses, process shipments, and ensure a seamless order fulfillment process."
+                    />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            </>
         );
 
     if (isError)
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">
-                    Failed to load your Orders
-                </h2>
-                <Link to="/products">
-                    <Button type="primary" className="!bg-primary">
-                        Back to Products
-                    </Button>
-                </Link>
-            </div>
+            <>
+                <Helmet>
+                    <title>Orders ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing orders. View order details, update order statuses, process shipments, and ensure a seamless order fulfillment process."
+                    />
+                </Helmet>
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load your Orders
+                    </h2>
+                    <Link to="/products">
+                        <Button type="primary" className="!bg-primary">
+                            Back to Products
+                        </Button>
+                    </Link>
+                </div>
+            </>
         );
 
     const columns = [
@@ -286,35 +305,47 @@ const Orders = () => {
     ];
 
     return (
-        <div className="p-8">
-            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
-                <Link to="/admin/dashboard">
-                    <Button type="primary" className="!bg-primary">
-                        <ArrowLeftOutlined />
-                        Dashboard
-                    </Button>
-                </Link>
-                <h2 className="text-3xl !font-bold">Orders</h2>
-            </div>
-            <Table
-                loading={isFetching}
-                dataSource={ordersData?.data}
-                columns={columns}
-                onChange={onChange}
-                pagination={false}
-                rowKey="_id"
-                className="mt-10"
-                scroll={{ x: "max-content" }}
-            />
-            <Flex justify="center" style={{ marginTop: "10px" }}>
-                <Pagination
-                    current={page}
-                    onChange={(value) => setPage(value)}
-                    pageSize={metaData?.limit}
-                    total={metaData?.total}
+        <>
+            <Helmet>
+                <title>
+                    Orders {ordersData ? `(${ordersData?.data?.length})` : ""} ‣
+                    Book Shop
+                </title>
+                <meta
+                    name="description"
+                    content="Admin dashboard for managing orders. View order details, update order statuses, process shipments, and ensure a seamless order fulfillment process."
                 />
-            </Flex>
-        </div>
+            </Helmet>
+            <div className="p-8 mb-20">
+                <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                    <Link to="/admin/dashboard">
+                        <Button type="primary" className="!bg-primary">
+                            <ArrowLeftOutlined />
+                            Dashboard
+                        </Button>
+                    </Link>
+                    <h2 className="text-3xl !font-bold">Orders</h2>
+                </div>
+                <Table
+                    loading={isFetching}
+                    dataSource={ordersData?.data}
+                    columns={columns}
+                    onChange={onChange}
+                    pagination={false}
+                    rowKey="_id"
+                    className="mt-10"
+                    scroll={{ x: "max-content" }}
+                />
+                <Flex justify="center" style={{ marginTop: "10px" }}>
+                    <Pagination
+                        current={page}
+                        onChange={(value) => setPage(value)}
+                        pageSize={metaData?.limit}
+                        total={metaData?.total}
+                    />
+                </Flex>
+            </div>
+        </>
     );
 };
 

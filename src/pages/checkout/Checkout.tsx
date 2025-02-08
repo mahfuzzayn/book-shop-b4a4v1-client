@@ -25,6 +25,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import PaymentForm from "./PaymentForm";
 import config from "../../config";
+import { Helmet } from "react-helmet-async";
 
 const stripePromise = loadStripe(config.stripe_publishable_key);
 
@@ -46,6 +47,7 @@ const CheckoutPage = () => {
     const [clearCart] = useClearCartMutation();
     const [createPaymentIntent] = useCreatePaymentIntentMutation();
     const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [isClientSecretLoading, setIsClientSecretLoading] = useState(false);
     const [isPaymentPrepared, setIsPaymentPrepared] = useState(false);
     const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
@@ -88,15 +90,47 @@ const CheckoutPage = () => {
     };
 
     const handleRemoveItem = async (productId: string) => {
+        const toastId = toast.loading("Removing item...", {
+            style: toastStyles.loading,
+        });
+
         const res = (await removeItem({
             userId: user?.userId,
             productId,
         })) as TResponse<TCartData>;
 
         if (res.error) {
-            toast.error(res.error.data.message, { style: toastStyles.error });
+            toast.error(res.error.data.message, {
+                id: toastId,
+                style: toastStyles.error,
+            });
         } else {
-            toast.success("Item removed", { style: toastStyles.success });
+            toast.success("Item removed", {
+                id: toastId,
+                style: toastStyles.success,
+            });
+        }
+    };
+
+    const handleClearCart = async () => {
+        const toastId = toast.loading("Clearing cart...", {
+            style: toastStyles.loading,
+        });
+
+        const res = (await clearCart({
+            userId: user?.userId,
+        })) as TResponse<any>;
+
+        if (res.error) {
+            toast.error(res.error.data.message, {
+                id: toastId,
+                style: toastStyles.error,
+            });
+        } else {
+            toast.success("Cart cleared", {
+                id: toastId,
+                style: toastStyles.success,
+            });
         }
     };
 
@@ -115,6 +149,8 @@ const CheckoutPage = () => {
         const toastId = toast.loading("Preparing payment", {
             style: toastStyles.loading,
         });
+
+        setIsClientSecretLoading(true)
 
         const res = (await createPaymentIntent({
             amount: calculateSubtotal() * 100,
@@ -137,212 +173,246 @@ const CheckoutPage = () => {
                 style: toastStyles.success,
             });
             setIsPaymentPrepared(true);
+            setIsClientSecretLoading(false);
             setClientSecret(clientSecret);
         }
     };
 
     if (isLoading)
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spin size="large" />
-            </div>
+            <>
+                <Helmet>
+                    <title>Cart ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                    />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            </>
         );
     if (isError)
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">
-                    Failed to load your Cart
-                </h2>
-                <Link to="/products">
-                    <Button type="primary" className="!bg-primary">
-                        Back to Products
-                    </Button>
-                </Link>
-            </div>
+            <>
+                <Helmet>
+                    <title>Cart ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                    />
+                </Helmet>
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load your Cart
+                    </h2>
+                    <Link to="/products">
+                        <Button type="primary" className="!bg-primary">
+                            Back to Products
+                        </Button>
+                    </Link>
+                </div>
+            </>
         );
 
     return (
-        <div className="checkout-page flex justify-between p-8">
-            <div className="cart-items flex-1 mr-8">
-                <Title
-                    level={2}
-                    className="flex items-center gap-x-3 !font-bold"
-                >
-                    <Link to="/products" className="!mb-1">
-                        <Button type="primary" className="!bg-primary">
-                            <ArrowLeftOutlined />
-                            Products
-                        </Button>
-                    </Link>
-                    Cart
-                </Title>
-                <Divider className="!my-10">
-                    Total Items in your Cart: {cart?.data?.totalItems}
-                </Divider>
-                {cart?.data?.items?.length === 0 ? (
-                    <h2 className="text-lg font-semibold mt-10">
-                        No items in your cart.
-                    </h2>
-                ) : (
-                    cart?.data?.items?.map((item: TCartItem) => (
-                        <Card
-                            key={item._id}
-                            title={item.title}
-                            extra={
-                                <Button
-                                    onClick={() =>
-                                        handleRemoveItem(item.productId)
-                                    }
-                                    type="primary"
-                                    className="!text-white !bg-dark"
-                                >
-                                    Remove
-                                </Button>
-                            }
-                            className="!bg-accent max-w-[300px] md:max-w-[480px]"
-                            style={{ marginBottom: 20 }}
-                        >
-                            <div className="flex flex-col gap-y-3">
-                                <Image
-                                    src={item.image}
-                                    className="max-w-[180px] rounded-lg"
-                                    width={180}
-                                />
-                                <p className="font-normal">
-                                    Author{" "}
-                                    <span className="font-bold text-primary">
-                                        {item.author}
-                                    </span>
-                                </p>
-                                <p className="font-normal">
-                                    Price{" "}
-                                    <span className="font-bold text-secondary">
-                                        {item.price}$
-                                    </span>
-                                </p>
-                                <Space>
-                                    <Button
-                                        icon={<MinusOutlined />}
-                                        onClick={() => {
-                                            if (!isPaymentPrepared) {
-                                                return handleUpdateQuantity(
-                                                    item.productId,
-                                                    -1
-                                                );
-                                            }
-                                        }}
-                                        disabled={
-                                            item.quantity <= 1 ||
-                                            isFetching ||
-                                            isPaymentPrepared
-                                        }
-                                    />
-                                    <Text>{item.quantity}</Text>
-                                    <Button
-                                        icon={<PlusOutlined />}
-                                        onClick={() => {
-                                            if (!isPaymentPrepared) {
-                                                return handleUpdateQuantity(
-                                                    item.productId,
-                                                    1
-                                                );
-                                            }
-                                        }}
-                                        disabled={
-                                            isFetching || isPaymentPrepared
-                                        }
-                                    />
-                                </Space>
-                            </div>
-                        </Card>
-                    ))
-                )}
-            </div>
-            {/* Hamburger Button */}
-            <div
-                className={`${
-                    isOpen ? "hidden" : "fixed"
-                } lg:hidden fixed top-9 right-0 bg-primary z-1 text-white p-2 rounded-md shadow-md cursor-pointer flex`}
-                onClick={() => setIsOpen(true)}
-            >
-                <p className="font-semibold">Checkout</p>
-                <div className="flex gap-x-2 items-center">
-                    <ShoppingCartOutlined className="text-lg relative top-[-1px]" />
-                </div>
-            </div>
-            <div
-                className={`${
-                    isOpen ? "fixed" : "hidden"
-                } lg:relative top-0 right-0 h-full cart-summary w-72 p-4 bg-accent rounded shadow-md`}
-            >
-                {/* Close Button */}
-                <button
-                    className="lg:hidden absolute right-4 bg-primary text-white p-2 rounded-md shadow-md cursor-pointer"
-                    onClick={() => setIsOpen(false)}
-                >
-                    <CloseOutlined className="text-xl" />
-                </button>
-                <p className="!text-2xl font-bold">Subtotal</p>
-                <div className="flex flex-col gap-y-2 my-4">
-                    {cart?.data?.items?.map(
-                        (item: TCartItem, index: number) => (
-                            <span
+        <>
+            <Helmet>
+                <title>Cart {`(${cart?.data?.totalItems})`} ‣ Book Shop</title>
+                <meta
+                    name="description"
+                    content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                />
+            </Helmet>
+            <div className="checkout-page flex justify-between p-8">
+                <div className="cart-items flex-1 mr-8">
+                    <Title
+                        level={2}
+                        className="flex items-center gap-x-3 !font-bold"
+                    >
+                        <Link to="/products" className="!mb-1">
+                            <Button type="primary" className="!bg-primary">
+                                <ArrowLeftOutlined />
+                                Products
+                            </Button>
+                        </Link>
+                        Cart
+                    </Title>
+                    <Divider className="!my-10">
+                        Total Items in your Cart: {cart?.data?.totalItems}
+                    </Divider>
+                    {cart?.data?.items?.length === 0 ? (
+                        <h2 className="text-lg font-semibold mt-10">
+                            No items in your cart.
+                        </h2>
+                    ) : (
+                        cart?.data?.items?.map((item: TCartItem) => (
+                            <Card
                                 key={item._id}
-                                className="font-normal text-dark"
+                                title={item.title}
+                                extra={
+                                    <Button
+                                        onClick={() =>
+                                            handleRemoveItem(item.productId)
+                                        }
+                                        type="primary"
+                                        className="!text-white !bg-dark"
+                                    >
+                                        Remove
+                                    </Button>
+                                }
+                                className="!bg-accent max-w-[300px] md:max-w-[480px]"
+                                style={{ marginBottom: 20 }}
                             >
-                                {index + 1}. {item.price}$ x {item.quantity} ={" "}
-                                {item.price * item.quantity}$
-                            </span>
-                        )
+                                <div className="flex flex-col gap-y-3">
+                                    <Image
+                                        src={item.image}
+                                        className="max-w-[180px] rounded-lg"
+                                        width={180}
+                                    />
+                                    <p className="font-normal">
+                                        Author{" "}
+                                        <span className="font-bold text-primary">
+                                            {item.author}
+                                        </span>
+                                    </p>
+                                    <p className="font-normal">
+                                        Price{" "}
+                                        <span className="font-bold text-secondary">
+                                            {item.price}$
+                                        </span>
+                                    </p>
+                                    <Space>
+                                        <Button
+                                            icon={<MinusOutlined />}
+                                            onClick={() => {
+                                                if (!isPaymentPrepared) {
+                                                    return handleUpdateQuantity(
+                                                        item.productId,
+                                                        -1
+                                                    );
+                                                }
+                                            }}
+                                            disabled={
+                                                item.quantity <= 1 ||
+                                                isFetching ||
+                                                isPaymentPrepared
+                                            }
+                                        />
+                                        <Text>{item.quantity}</Text>
+                                        <Button
+                                            icon={<PlusOutlined />}
+                                            onClick={() => {
+                                                if (!isPaymentPrepared) {
+                                                    return handleUpdateQuantity(
+                                                        item.productId,
+                                                        1
+                                                    );
+                                                }
+                                            }}
+                                            disabled={
+                                                isFetching || isPaymentPrepared
+                                            }
+                                        />
+                                    </Space>
+                                </div>
+                            </Card>
+                        ))
                     )}
                 </div>
-                <p className="text-lg font-bold">
-                    Total: {calculateSubtotal()}$
-                </p>
-                {!cart?.data?.items?.length ||
-                    (!clientSecret && (
-                        <div className="flex flex-col gap-y-5 mt-5">
-                            <Button
-                                type="primary"
-                                className="!bg-secondary w-full"
-                                onClick={handlePreparePayment}
-                            >
-                                Prepare Payment
-                            </Button>
-                            <Button
-                                onClick={() =>
-                                    clearCart({ userId: user?.userId })
-                                }
-                                danger
-                                className="w-full"
-                            >
-                                Clear Cart
-                            </Button>
-                        </div>
-                    ))}
-                {/* Stripe Payment Form Element */}
-                {clientSecret && (
-                    <Elements stripe={stripePromise} options={{ clientSecret }}>
-                        <PaymentForm
-                            clearCart={clearCart}
-                            userId={user?.userId as string}
-                            cartItems={cartData}
-                            clientSecret={clientSecret}
-                            setClientSecret={setClientSecret}
-                            setIsPaymentSuccess={setIsPaymentSuccess}
-                        />
-                    </Elements>
-                )}
-                {isPaymentSuccess && (
-                    <p className="text-center text-sm font-semibold mt-5">
-                        View orders on{" "}
-                        <Link to="/user/dashboard" className="text-primary">
-                            Dashboard
-                        </Link>
+                {/* Hamburger Button */}
+                <div
+                    className={`${
+                        isOpen ? "hidden" : "fixed"
+                    } lg:hidden fixed top-9 right-0 bg-primary z-1 text-white p-2 rounded-tr-none rounded-br-none rounded-md shadow-md cursor-pointer flex`}
+                    onClick={() => setIsOpen(true)}
+                >
+                    <p className="font-semibold">Checkout</p>
+                    <div className="flex gap-x-2 items-center">
+                        <ShoppingCartOutlined className="text-lg relative top-[-1px]" />
+                    </div>
+                </div>
+                <div
+                    className={`${
+                        isOpen ? "fixed" : "hidden"
+                    } lg:relative top-0 right-0 h-full cart-summary w-72 p-4 bg-accent rounded shadow-md`}
+                >
+                    {/* Close Button */}
+                    <button
+                        className="lg:hidden absolute right-4 bg-primary text-white p-2 rounded-md shadow-md cursor-pointer"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        <CloseOutlined className="text-xl" />
+                    </button>
+                    <p className="!text-2xl font-bold">Subtotal</p>
+                    <div className="flex flex-col gap-y-2 my-4">
+                        {cart?.data?.items?.map(
+                            (item: TCartItem, index: number) => (
+                                <span
+                                    key={item._id}
+                                    className="font-normal text-dark"
+                                >
+                                    {index + 1}. {item.price}$ x {item.quantity}{" "}
+                                    = {item.price * item.quantity}$
+                                </span>
+                            )
+                        )}
+                    </div>
+                    <p className="text-lg font-bold">
+                        Total: {calculateSubtotal()}$
                     </p>
-                )}
+                    {!cart?.data?.items?.length ||
+                        (!clientSecret &&
+                            (!isClientSecretLoading ? (
+                                <div className="flex flex-col gap-y-5 mt-5">
+                                    <Button
+                                        type="primary"
+                                        className="!bg-secondary w-full"
+                                        onClick={handlePreparePayment}
+                                    >
+                                        Prepare Payment
+                                    </Button>
+                                    <Button
+                                        onClick={handleClearCart}
+                                        danger
+                                        className="w-full"
+                                    >
+                                        Clear Cart
+                                    </Button>
+                                </div>
+                            ) : (
+                                <div className="flex justify-center items-center my-5">
+                                    <Spin size="default" />
+                                </div>
+                            )))}
+                    {/* Stripe Payment Form Element */}
+                    {clientSecret && (
+                        <Elements
+                            stripe={stripePromise}
+                            options={{ clientSecret }}
+                        >
+                            <PaymentForm
+                                clearCart={clearCart}
+                                userId={user?.userId as string}
+                                cartItems={cartData}
+                                clientSecret={clientSecret}
+                                setClientSecret={setClientSecret}
+                                setIsPaymentSuccess={setIsPaymentSuccess}
+                            />
+                        </Elements>
+                    )}
+                    {isPaymentSuccess && (
+                        <p className="text-center text-sm font-semibold mt-5">
+                            View orders on{" "}
+                            <Link to="/user/dashboard" className="text-primary">
+                                Dashboard
+                            </Link>
+                        </p>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

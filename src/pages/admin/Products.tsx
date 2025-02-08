@@ -24,6 +24,7 @@ import {
     useGetAllProductsQuery,
 } from "../../redux/features/admin/productManagement.api";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 type TTableData = Pick<
     TProduct,
@@ -159,59 +160,90 @@ const Products = () => {
 
     if (isLoading)
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spin size="large" />
-            </div>
+            <>
+                <Helmet>
+                    <title>Products ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing your book store inventory. Edit, update, or remove books from your store anytime."
+                    />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            </>
         );
 
     if (isError)
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">
-                    Failed to load your Orders
-                </h2>
-                <Link to="/admin/dashboard">
-                    <Button type="primary" className="!bg-primary">
-                        Back to Dashboard
-                    </Button>
-                </Link>
-            </div>
+            <>
+                <Helmet>
+                    <title>Products ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Admin dashboard for managing your book store inventory. Edit, update, or remove books from your store anytime."
+                    />
+                </Helmet>
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load your Orders
+                    </h2>
+                    <Link to="/admin/dashboard">
+                        <Button type="primary" className="!bg-primary">
+                            Back to Dashboard
+                        </Button>
+                    </Link>
+                </div>
+            </>
         );
 
     return (
-        <div className="p-8">
-            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
-                <Link to="/admin/dashboard">
-                    <Button type="primary" className="!bg-primary">
-                        <ArrowLeftOutlined />
-                        Dashboard
-                    </Button>
-                </Link>
-                <h2 className="text-3xl !font-bold">Products</h2>
-                <Link to="create-product">
-                    <Button type="primary" className="!bg-secondary">
-                        Create Product <ArrowRightOutlined />
-                    </Button>
-                </Link>
-            </div>
-            <Table
-                loading={isFetching}
-                columns={columns}
-                dataSource={tableData}
-                onChange={onChange}
-                pagination={false}
-                className="mt-10"
-                scroll={{ x: "max-content" }}
-            />
-            <Flex justify="center" className="!mt-5 !my-10">
-                <Pagination
-                    current={page}
-                    onChange={(value) => setPage(value)}
-                    pageSize={metaData?.limit}
-                    total={metaData?.total}
+        <>
+            <Helmet>
+                <title>
+                    Products{" "}
+                    {productsData ? `(${productsData?.data?.length})` : ""} ‣
+                    Book Shop
+                </title>
+                <meta
+                    name="description"
+                    content="Admin dashboard for managing your book store inventory. Edit, update, or remove books from your store anytime."
                 />
-            </Flex>
-        </div>
+            </Helmet>
+            <div className="p-8 mb-16">
+                <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
+                    <Link to="/admin/dashboard">
+                        <Button type="primary" className="!bg-primary">
+                            <ArrowLeftOutlined />
+                            Dashboard
+                        </Button>
+                    </Link>
+                    <h2 className="text-3xl !font-bold">Products</h2>
+                    <Link to="create-product">
+                        <Button type="primary" className="!bg-secondary">
+                            Create Product <ArrowRightOutlined />
+                        </Button>
+                    </Link>
+                </div>
+                <Table
+                    loading={isFetching}
+                    columns={columns}
+                    dataSource={tableData}
+                    onChange={onChange}
+                    pagination={false}
+                    className="mt-10"
+                    scroll={{ x: "max-content" }}
+                />
+                <Flex justify="center" className="!mt-5 !my-10">
+                    <Pagination
+                        current={page}
+                        onChange={(value) => setPage(value)}
+                        pageSize={metaData?.limit}
+                        total={metaData?.total}
+                    />
+                </Flex>
+            </div>
+        </>
     );
 };
 

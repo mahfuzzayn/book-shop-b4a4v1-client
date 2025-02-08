@@ -40,7 +40,7 @@ const Navbar = () => {
     const handleLogout = () => {
         dispatch(logout());
 
-        toast.success("User logged out successfully", {
+        toast.success("Logged out successfully", {
             duration: 2000,
             style: toastStyles.success,
         });
@@ -126,7 +126,7 @@ const Navbar = () => {
                             <Link
                                 key="home"
                                 to="/"
-                                className="font-semibold !text-primary hover:!text-dark transition"
+                                className="font-semibold !text-primary hover:!text-dark transition max-h-12 flex items-center"
                                 onClick={() => setIsMenuOpen(false)}
                             >
                                 Home
@@ -135,7 +135,7 @@ const Navbar = () => {
                                 <Link
                                     key={item.key}
                                     to={item?.label?.props?.to}
-                                    className="font-semibold !text-primary hover:!text-dark transition"
+                                    className="font-semibold !text-primary hover:!text-dark transition max-h-12 flex items-center"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     {item.key}

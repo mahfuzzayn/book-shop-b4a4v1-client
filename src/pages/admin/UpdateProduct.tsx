@@ -119,7 +119,7 @@ const UpdateProduct = () => {
         );
 
     return (
-        <div className="p-8">
+        <div className="p-8 mb-16">
             <Link to="/admin/dashboard/products">
                 <Button type="primary" className="!bg-primary">
                     <ArrowLeftOutlined />

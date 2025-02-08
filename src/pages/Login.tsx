@@ -42,7 +42,7 @@ export default function Login() {
                     style: toastStyles.error,
                 });
             } else {
-                toast.success("User logged in successfully", {
+                toast.success("Logged in successfully", {
                     id: toastId,
                     duration: 2000,
                     style: toastStyles.success,
@@ -89,7 +89,7 @@ export default function Login() {
     return (
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                <div className="space-y-5 bg-accent p-20 rounded-xl">
+                <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
                     <h2 className="text-4xl font-bold text-center mb-10">
                         Book Shop Login
                     </h2>

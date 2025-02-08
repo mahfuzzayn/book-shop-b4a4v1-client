@@ -43,7 +43,7 @@ const ProductDetail = () => {
         );
 
     return (
-        <div className="p-8">
+        <div className="p-8 mb-20">
             <Link to="/admin/dashboard/products">
                 <Button type="primary" className="!bg-primary">
                     <ArrowLeftOutlined />

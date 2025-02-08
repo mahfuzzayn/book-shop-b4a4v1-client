@@ -10,11 +10,11 @@ import { TResponse } from "../../types";
 import { toastStyles } from "../../constants/toaster";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet-async";
 
 const ProductDetail = () => {
     const { productId } = useParams();
-    const { data, isLoading, isError } =
-        useGetSingleProductQuery(productId);
+    const { data, isLoading, isError } = useGetSingleProductQuery(productId);
     const user = useAppSelector(selectCurrentUser);
     const [addItem] = useAddItemMutation();
     const navigate = useNavigate();
@@ -67,15 +67,32 @@ const ProductDetail = () => {
           }
         : null;
 
-        if (isLoading)
-            return (
+    if (isLoading)
+        return (
+            <>
+                <Helmet>
+                    <title>Product ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                    />
+                </Helmet>
                 <div className="flex justify-center items-center min-h-screen">
                     <Spin size="large" />
                 </div>
-            );
-    
-        if (isError)
-            return (
+            </>
+        );
+
+    if (isError)
+        return (
+            <>
+                <Helmet>
+                    <title>Product ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                    />
+                </Helmet>
                 <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
                     <h2 className="text-2xl font-semibold">
                         Failed to load product detail
@@ -87,54 +104,64 @@ const ProductDetail = () => {
                         </Button>
                     </Link>
                 </div>
-            );
+            </>
+        );
 
     return (
-        <div className="p-8">
-            <Link to="/products">
-                <Button type="primary" className="!bg-primary">
-                    <ArrowLeftOutlined />
-                    Products
-                </Button>
-            </Link>
-            <h1 className="text-2xl sm:text-3xl text-center mt-10 font-extrabold">
-                Details of {pData?.title}
-            </h1>
-            <Divider className="!text-xl !my-5">Product Info</Divider>
-            <Descriptions size="middle">
-                {productInfo &&
-                    Object.entries(productInfo).map(([item, value]) => (
-                        <Descriptions.Item label={item} key={item}>
-                            {value}
-                        </Descriptions.Item>
-                    ))}
-            </Descriptions>
-            <div className="mt-5 text-[#00000073]">
-                Description:
-                <span className="ml-1 font-normal text-black">
-                    {pData.description}
-                </span>
-                <br />
-            </div>
-            <div className="flex flex-col text-xl font-bold mt-10">
-                Image
-                <div className="mx-2 sm:mx-5">
-                    <Image
-                        src={pData?.image}
-                        alt={`${pData?.title} - Book Image`}
-                        width={240}
-                        className="max-w-[240px] w-full rounded-xl mt-5"
-                    />
+        <>
+            <Helmet>
+                <title>{pData?.title} ‣ Book Shop</title>
+                <meta
+                    name="description"
+                    content="Explore detailed information about this product, including price, availability, and author details. Add to cart or purchase now!"
+                />
+            </Helmet>
+            <div className="p-8 mb-20">
+                <Link to="/products">
+                    <Button type="primary" className="!bg-primary">
+                        <ArrowLeftOutlined />
+                        Products
+                    </Button>
+                </Link>
+                <h1 className="text-2xl sm:text-3xl text-center mt-10 font-extrabold">
+                    Details of {pData?.title}
+                </h1>
+                <Divider className="!text-xl !my-5">Product Info</Divider>
+                <Descriptions size="middle">
+                    {productInfo &&
+                        Object.entries(productInfo).map(([item, value]) => (
+                            <Descriptions.Item label={item} key={item}>
+                                {value}
+                            </Descriptions.Item>
+                        ))}
+                </Descriptions>
+                <div className="mt-5 text-[#00000073]">
+                    Description:
+                    <span className="ml-1 font-normal text-black">
+                        {pData.description}
+                    </span>
+                    <br />
                 </div>
+                <div className="flex flex-col text-xl font-bold mt-6">
+                    Image
+                    <div className="mx-2 sm:mx-5">
+                        <Image
+                            src={pData?.image}
+                            alt={`${pData?.title} - Book Image`}
+                            width={240}
+                            className="max-w-[240px] w-full rounded-xl mt-5"
+                        />
+                    </div>
+                </div>
+                <Button
+                    type="primary"
+                    className="!bg-secondary mt-6"
+                    onClick={() => handleBuyNow(pData._id)}
+                >
+                    Buy Now
+                </Button>
             </div>
-            <Button
-                type="primary"
-                className="!bg-secondary mt-12"
-                onClick={() => handleBuyNow(pData._id)}
-            >
-                Buy Now
-            </Button>
-        </div>
+        </>
     );
 };
 

@@ -1,50 +1,67 @@
-# React + TypeScript + Vite
+# Book Shop - Client Side (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+-   **Live Server**: https://book-shop-b4a4v1-client.vercel.app/
 
-Currently, two official plugins are available:
+## **Project Overview**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Welcome to the Book Shop Client! This application provides a seamless shopping experience for users to browse, search, and purchase books. Built with React, TypeScript, and Tailwind, the platform ensures a responsive, visually appealing interface. State management is handled using Redux with RTK Query and Redux Persistor for efficient data handling. The application integrates with a secure backend built on Node.js and Express, and payment processing is powered by Stripe. It allows users to manage their shopping carts, complete orders, and enjoy a personalized browsing experience with features like search, filters, and product recommendations.
 
-## Expanding the ESLint configuration
+## **Tech Stack**
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+-   **Frontend Framework:** React (Vite + TypeScript)
+-   **State Management:** Redux Toolkit
+-   **UI Library:** Ant Design & Tailwind CSS
+-   **Routing:** React Router
+-   **API Requests:** RTK Query
+-   **Authentication:** JWT-based authentication with Redux Persist
+-   **Payment Integration:** Stripe
 
-- Configure the top-level `parserOptions` property like this:
+## **Getting Started**
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### **1️⃣ Clone the Repository**
+
+```sh
+git clone https://github.com/mahfuzzayn/book-shop-b4a4v1-client.git
+cd book-shop-b4a4v1-client
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### **2️⃣ Install Dependencies**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```sh
+npm install
 ```
+
+### **3️⃣ Environment Variables**
+
+Create a `.env` file in the root directory and add the following:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+VITE_STRIPE_PUBLIC_KEY=your_stripe_public_key
+```
+
+### **4️⃣ Run the Development Server**
+
+```sh
+npm run dev
+```
+
+Your app will be available at `http://localhost:5173`.
+
+## **Features**
+
+-   Public routes: Home, Product Listings, Product Details, About
+-   Private routes: Checkout, User Dashboard, Admin Dashboard
+-   Responsive design, error handling, and UI enhancements
+
+## **Build & Deployment**
+
+To build the project for production:
+
+```sh
+npm run build
+```
+
+For deployment, use **Vercel**, **Netlify**, or other static hosting services.
+
+Developed by [Mahfuz Zayn](https://mahfuzzayn.netlify.app/).

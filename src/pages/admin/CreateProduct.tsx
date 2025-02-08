@@ -76,7 +76,7 @@ const CreateProduct = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="p-8 mb-16">
             <Link to="/admin/dashboard/products">
                 <Button type="primary" className="!bg-primary">
                     <ArrowLeftOutlined />

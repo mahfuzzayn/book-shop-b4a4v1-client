@@ -74,7 +74,7 @@ export default function Register() {
     return (
         <Row justify="center" align="middle" style={{ height: "100vh" }}>
             <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                <div className="space-y-5 bg-accent p-20 rounded-xl">
+                <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
                     <h2 className="text-4xl font-bold text-center mb-10">
                         Book Shop Register
                     </h2>
