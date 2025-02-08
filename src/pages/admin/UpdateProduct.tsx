@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
-import { Button, Col, Divider, Form, Input, Row, Spin } from "antd";
+import { Button, Col, Form, Input, Row, Spin } from "antd";
 import { toast } from "sonner";
 import { Link, useParams } from "react-router-dom";
 import {
@@ -27,8 +27,6 @@ const UpdateProduct = () => {
         refetch,
     } = useGetSingleProductQuery(productId);
 
-    // This is only for development purposes
-    // Should be removed
     const productDefaultValues = productData
         ? {
               ...productData?.data,
@@ -121,7 +119,7 @@ const UpdateProduct = () => {
         );
 
     return (
-        <div className="p-6">
+        <div className="p-8">
             <Link to="/admin/dashboard/products">
                 <Button type="primary" className="!bg-primary">
                     <ArrowLeftOutlined />

@@ -91,6 +91,7 @@ const Products = () => {
             _id,
             title,
             author,
+            quantity,
             inStock: inStock ? `${quantity} left` : "Unavailable",
         })
     );
@@ -152,6 +153,8 @@ const Products = () => {
 
             setParams(queryParams);
         }
+
+        if (pagination || sorter) return;
     };
 
     if (isLoading)
@@ -176,7 +179,7 @@ const Products = () => {
         );
 
     return (
-        <div className="p-6">
+        <div className="p-8">
             <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
                 <Link to="/admin/dashboard">
                     <Button type="primary" className="!bg-primary">

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { toastStyles } from "../../constants/toaster";
 import { useAddOrderMutation } from "../../redux/features/order/order.api";
-import { TCartItem } from "../../types";
+import { TCartItem, TOrder, TResponse } from "../../types";
 
 type PaymentFormProps = {
     clientSecret: string;
@@ -34,6 +34,13 @@ const PaymentForm = ({
         setLoading(true);
 
         const cardElement = elements.getElement(CardElement);
+
+        if (!cardElement) {
+            toast.error("Failed to prepare payment", { style: toastStyles.error });
+            setLoading(false);
+            return;
+        }
+
         const { paymentIntent, error } = await stripe.confirmCardPayment(
             clientSecret,
             {
@@ -67,7 +74,7 @@ const PaymentForm = ({
                 },
             };
 
-            const res = await addOrder(orderData);
+            const res = (await addOrder(orderData)) as TResponse<TOrder>;
 
             if (res.error) {
                 toast.error(res.error.data.message, {

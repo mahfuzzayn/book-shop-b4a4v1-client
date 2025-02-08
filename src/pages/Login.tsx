@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Row } from "antd";
 import { FieldValues } from "react-hook-form";
 import { useLoginUserMutation } from "../redux/features/auth/authApi";
@@ -49,7 +49,7 @@ export default function Login() {
                 });
                 navigate("/");
             }
-        } catch (error) {
+        } catch (error: any) {
             if (error?.data?.message === "User is deactivated!") {
                 toast.error("You have been deactivated", {
                     id: toastId,

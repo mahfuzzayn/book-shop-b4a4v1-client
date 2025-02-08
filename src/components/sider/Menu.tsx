@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Item from "antd/es/list/Item";
 import { Link } from "react-router-dom";
 
-const Menu = ({ items }) => {
+const Menu = ({ items }: any) => {
     return (
         <ul>
-            {items.map((item) => (
+            {items.map((item: any) => (
                 <Item key={item.key} className="p-4">
                     <Link
                         to={`/admin/dashboard/${item.value}`}

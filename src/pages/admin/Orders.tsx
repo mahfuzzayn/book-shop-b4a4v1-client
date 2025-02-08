@@ -25,7 +25,7 @@ import {
     useGetAllOrdersQuery,
     useUpdateOrderStatusByAdminMutation,
 } from "../../redux/features/admin/orderManagment.api";
-import { TOrder, TProduct, TQueryParam, TResponse } from "../../types";
+import { TOrder, TQueryParam, TResponse } from "../../types";
 
 type TTableData = Pick<
     TOrder,
@@ -104,7 +104,7 @@ const Orders = () => {
                     style: toastStyles.success,
                 }
             );
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.data?.message || "Failed to update status", {
                 style: toastStyles.error,
             });
@@ -164,6 +164,8 @@ const Orders = () => {
 
             setParams(queryParams);
         }
+
+        if (pagination || sorter) return;
     };
 
     if (isLoading)
@@ -284,7 +286,7 @@ const Orders = () => {
     ];
 
     return (
-        <div className="p-6">
+        <div className="p-8">
             <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
                 <Link to="/admin/dashboard">
                     <Button type="primary" className="!bg-primary">

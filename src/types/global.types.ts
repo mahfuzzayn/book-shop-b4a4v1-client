@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseQueryApi } from "@reduxjs/toolkit/query";
 import React from "react";
 
@@ -6,6 +7,7 @@ export type TError = {
         message: string;
         stack: string;
         success: boolean;
+        errorSources: any;
     };
     status: number;
 };

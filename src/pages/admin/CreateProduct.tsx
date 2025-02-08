@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
-import { Button, Col, Divider, Form, Input, Row } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import { toast } from "sonner";
 import { useAddProductMutation } from "../../redux/features/admin/productManagement.api";
 import BSForm from "../../components/form/BSForm";
@@ -40,7 +40,11 @@ const CreateProduct = () => {
         const formData = new FormData();
 
         const productData = {
-            product: data,
+            product: {
+                ...data,
+                price: Number(data.price),
+                quantity: Number(data.quantity),
+            },
         };
 
         try {

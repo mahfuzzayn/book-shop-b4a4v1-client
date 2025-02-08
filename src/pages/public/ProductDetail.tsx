@@ -11,16 +11,9 @@ import { toastStyles } from "../../constants/toaster";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
-type TApiError = {
-    data: {
-        message: string;
-    };
-    status: number;
-};
-
 const ProductDetail = () => {
     const { productId } = useParams();
-    const { data, isLoading, isError, error } =
+    const { data, isLoading, isError } =
         useGetSingleProductQuery(productId);
     const user = useAppSelector(selectCurrentUser);
     const [addItem] = useAddItemMutation();
@@ -97,7 +90,7 @@ const ProductDetail = () => {
             );
 
     return (
-        <div className="p-6">
+        <div className="p-8">
             <Link to="/products">
                 <Button type="primary" className="!bg-primary">
                     <ArrowLeftOutlined />

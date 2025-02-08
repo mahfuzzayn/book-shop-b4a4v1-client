@@ -10,10 +10,7 @@ import {
 } from "../../redux/features/admin/productManagement.api";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Image, Select, Slider, Spin } from "antd";
-import {
-    CloseOutlined,
-    MenuOutlined,
-} from "@ant-design/icons";
+import { CloseOutlined, MenuOutlined } from "@ant-design/icons";
 import { productCategories } from "../../constants/product";
 import { useAddItemMutation } from "../../redux/features/cart/cartApi";
 import { useAppSelector } from "../../redux/hook";
@@ -77,7 +74,9 @@ const Products = () => {
             return;
         }
 
-        const toastId = toast.loading("Adding to cart...");
+        const toastId = toast.loading("Adding to cart...", {
+            style: toastStyles.loading,
+        });
 
         try {
             const res = (await addItem(itemData)) as TResponse<any>;

@@ -39,6 +39,8 @@ const CheckoutPage = () => {
         isFetching,
     } = useGetCartQuery(user?.userId);
 
+    const cartData = cart?.data?.items || [];
+
     const [updateQuantity] = useUpdateQuantityMutation();
     const [removeItem] = useRemoveItemMutation();
     const [clearCart] = useClearCartMutation();
@@ -120,7 +122,7 @@ const CheckoutPage = () => {
         })) as TResponse<any>;
 
         if (res.error) {
-            toast.error(res.error.message, {
+            toast.error(res.error.data.message, {
                 id: toastId,
                 style: toastStyles.error,
             });
@@ -282,12 +284,17 @@ const CheckoutPage = () => {
                 </button>
                 <p className="!text-2xl font-bold">Subtotal</p>
                 <div className="flex flex-col gap-y-2 my-4">
-                    {cart?.data?.items?.map((item, index) => (
-                        <span key={item._id} className="font-normal text-dark">
-                            {index + 1}. {item.price}$ x {item.quantity} ={" "}
-                            {item.price * item.quantity}$
-                        </span>
-                    ))}
+                    {cart?.data?.items?.map(
+                        (item: TCartItem, index: number) => (
+                            <span
+                                key={item._id}
+                                className="font-normal text-dark"
+                            >
+                                {index + 1}. {item.price}$ x {item.quantity} ={" "}
+                                {item.price * item.quantity}$
+                            </span>
+                        )
+                    )}
                 </div>
                 <p className="text-lg font-bold">
                     Total: {calculateSubtotal()}$
@@ -319,7 +326,7 @@ const CheckoutPage = () => {
                         <PaymentForm
                             clearCart={clearCart}
                             userId={user?.userId as string}
-                            cartItems={cart?.data?.items}
+                            cartItems={cartData}
                             clientSecret={clientSecret}
                             setClientSecret={setClientSecret}
                             setIsPaymentSuccess={setIsPaymentSuccess}

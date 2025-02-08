@@ -7,5 +7,5 @@ export interface TProduct {
     category: string;
     description: string;
     quantity: number;
-    inStock: boolean;
+    inStock: string | boolean;
 }

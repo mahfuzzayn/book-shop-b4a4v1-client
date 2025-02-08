@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Row } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { useRegisterUserMutation } from "../redux/features/auth/authApi";
@@ -46,7 +46,7 @@ export default function Register() {
                 });
                 navigate("/login");
             }
-        } catch (error) {
+        } catch (error: any) {
             if (error?.data?.err?.code === 11000) {
                 toast.error("An account with this email already exists", {
                     id: toastId,

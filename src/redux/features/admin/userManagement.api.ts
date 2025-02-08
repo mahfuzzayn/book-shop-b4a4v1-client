@@ -1,6 +1,7 @@
+import { TUser } from "../../../types";
 import { TQueryParam, TResponseRedux } from "../../../types/global.types";
 import { baseApi } from "../../api/baseApi";
-import { TUser } from "../auth/authSlice";
+
 
 const userManagementApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({

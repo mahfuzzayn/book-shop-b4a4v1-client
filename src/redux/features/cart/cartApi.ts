@@ -8,7 +8,7 @@ const cartApi = baseApi.injectEndpoints({
                 url: `/carts/${userId}`,
                 method: "GET",
             }),
-            transformResponse: (response: TResponseRedux<TCartData[]>) => {
+            transformResponse: (response: TResponseRedux<TCartData>) => {
                 return {
                     data: response.data,
                 };

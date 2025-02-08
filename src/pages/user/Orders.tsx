@@ -99,7 +99,7 @@ const Orders = () => {
             toast.success(`Order has been ${newStatus}`, {
                 style: toastStyles.success,
             });
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.data?.message || "Failed to update status", {
                 style: toastStyles.error,
             });
@@ -126,6 +126,8 @@ const Orders = () => {
 
             setParams(queryParams);
         }
+
+        if (pagination || sorter) return;
     };
 
     if (isLoading)
