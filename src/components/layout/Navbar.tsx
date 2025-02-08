@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Layout, Menu, Button, Image } from "antd";
+import { Layout, Button, Image } from "antd";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { verifyToken } from "../../utils/verifyToken";
 import { TUser } from "../../types/userManagement.types";
@@ -121,23 +121,36 @@ const Navbar = () => {
                 {/* Mobile Menu */}
                 {isMenuOpen && (
                     <div className="absolute top-full left-0 w-full bg-light shadow-lg rounded-md flex flex-col items-center p-2 z-50 md:hidden">
-                        {/* Navigation Links */}
-                        <Menu
-                            mode="vertical"
-                            className="!bg-accent w-full text-center rounded-lg"
-                            selectable={false}
-                            items={navbarItems}
-                            onClick={() => setIsMenuOpen(false)} // Auto-close menu on click
-                        />
+                        <div className="flex flex-col items-center bg-accent w-full rounded-md shadow-md">
+                            {/* Navigation Links */}
+                            <Link
+                                key="home"
+                                to="/"
+                                className="font-semibold !text-primary hover:!text-dark transition"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Home
+                            </Link>
+                            {navbarItems.map((item: any) => (
+                                <Link
+                                    key={item.key}
+                                    to={item?.label?.props?.to}
+                                    className="font-semibold !text-primary hover:!text-dark transition"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.key}
+                                </Link>
+                            ))}
+                        </div>
                         {/* Authentication Buttons (Mobile) */}
                         {!user ? (
                             <Link
                                 to="/login"
-                                className="w-full text-center my-2"
+                                className="flex text-center w-full"
                             >
                                 <Button
                                     type="primary"
-                                    className="!bg-primary font-semibold w-full rounded-full py-2"
+                                    className="!bg-primary font-semibold w-full sm:w-auto rounded-full ml-auto py-2 my-3"
                                 >
                                     Login
                                 </Button>
@@ -145,7 +158,7 @@ const Navbar = () => {
                         ) : (
                             <Button
                                 type="primary"
-                                className="!bg-secondary font-semibold w-full rounded-full py-2 my-2"
+                                className="!bg-secondary font-semibold  rounded-full w-full ml-auto sm:w-auto py-2 my-3"
                                 onClick={() => {
                                     dispatch(logout());
                                     setIsMenuOpen(false);
