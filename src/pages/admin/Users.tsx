@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     Button,
@@ -130,6 +131,14 @@ const Users = () => {
     );
 
     const columns: TableColumnsType<TTableData> = [
+        {
+            title: "No.",
+            dataIndex: "serial",
+            key: "serial",
+            render: (_: any, __: any, index: number) => (
+                <span>{index + 1}</span>
+            ),
+        },
         {
             title: "Name",
             dataIndex: "name",

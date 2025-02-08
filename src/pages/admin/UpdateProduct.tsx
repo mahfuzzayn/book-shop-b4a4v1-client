@@ -15,6 +15,7 @@ import BSForm from "../../components/form/BSForm";
 import { productCategories } from "../../constants/product";
 import { toastStyles } from "../../constants/toaster";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet-async";
 
 const UpdateProduct = () => {
     const { productId } = useParams();
@@ -98,125 +99,184 @@ const UpdateProduct = () => {
 
     if (pIsLoading || pIsFetching)
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <Spin size="large" />
-            </div>
+            <>
+                <Helmet>
+                    <title>Update ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Modify product details such as price, stock, images, and descriptions. Keep product information accurate and up-to-date to enhance the shopping experience."
+                    />
+                </Helmet>
+                <div className="flex justify-center items-center min-h-screen">
+                    <Spin size="large" />
+                </div>
+            </>
         );
 
     if (isError)
         return (
-            <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
-                <h2 className="text-2xl font-semibold">
-                    Failed to load product details
-                </h2>
-                <p>Product ID: {productId}</p>
-                <Link to="/admin/dashboard/products">
-                    <Button type="primary" className="!bg-primary">
-                        <ArrowLeftOutlined /> Back to Products
-                    </Button>
-                </Link>
-            </div>
+            <>
+                <Helmet>
+                    <title>Update ‣ Book Shop</title>
+                    <meta
+                        name="description"
+                        content="Modify product details such as price, stock, images, and descriptions. Keep product information accurate and up-to-date to enhance the shopping experience."
+                    />
+                </Helmet>
+                <div className="flex flex-col justify-center items-center min-h-screen gap-y-5">
+                    <h2 className="text-2xl font-semibold">
+                        Failed to load product details
+                    </h2>
+                    <p>Product ID: {productId}</p>
+                    <Link to="/admin/dashboard/products">
+                        <Button type="primary" className="!bg-primary">
+                            <ArrowLeftOutlined /> Back to Products
+                        </Button>
+                    </Link>
+                </div>
+            </>
         );
 
     return (
-        <div className="p-8 mb-16">
-            <Link to="/admin/dashboard/products">
-                <Button type="primary" className="!bg-primary">
-                    <ArrowLeftOutlined />
-                    Products
-                </Button>
-            </Link>
-            <Row className="my-10">
-                <Col span={24}>
-                    <BSForm
-                        onSubmit={onSubmit}
-                        defaultValues={productDefaultValues}
-                    >
-                        <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10">
-                            Update Product: {productData?.data?.title}
-                        </h2>
-                        <Row gutter={8}>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSInput
-                                    type="text"
-                                    name="title"
-                                    label="Title"
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSInput
-                                    type="text"
-                                    name="author"
-                                    label="Author"
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSInput
-                                    type="number"
-                                    name="price"
-                                    label="Price"
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <Controller
-                                    name="image"
-                                    render={({
-                                        field: { onChange, value, ...field },
-                                    }) => (
-                                        <Form.Item
-                                            label="Picture"
-                                            className="font-bold"
-                                        >
-                                            <Input
-                                                type="file"
-                                                {...field}
-                                                value={value?.fileName}
-                                                onChange={(e) =>
-                                                    onChange(
-                                                        e.target.files?.[0]
-                                                    )
-                                                }
-                                                size="large"
-                                                className="font-normal"
-                                            />
-                                        </Form.Item>
-                                    )}
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSSelect
-                                    name="category"
-                                    label="Category"
-                                    options={categoryOptions}
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSInput
-                                    type="number"
-                                    name="quantity"
-                                    label="Quantity"
-                                />
-                            </Col>
-                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-                                <BSTextArea
-                                    name="description"
-                                    label="Description"
-                                />
-                            </Col>
-                        </Row>
-                        <div className="flex">
-                            <Button
-                                htmlType="submit"
-                                type="primary"
-                                className="!bg-secondary"
-                            >
-                                Update
-                            </Button>
-                        </div>
-                    </BSForm>
-                </Col>
-            </Row>
-        </div>
+        <>
+            <Helmet>
+                <title>{productData?.data?.title} ‣ Book Shop</title>
+                <meta
+                    name="description"
+                    content="Modify product details such as price, stock, images, and descriptions. Keep product information accurate and up-to-date to enhance the shopping experience."
+                />
+            </Helmet>
+            <div className="p-8 mb-16">
+                <Link to="/admin/dashboard/products">
+                    <Button type="primary" className="!bg-primary">
+                        <ArrowLeftOutlined />
+                        Products
+                    </Button>
+                </Link>
+                <Row className="my-10">
+                    <Col span={24}>
+                        <BSForm
+                            onSubmit={onSubmit}
+                            defaultValues={productDefaultValues}
+                        >
+                            <h2 className="text-2xl md:text-3xl font-extrabold text-center mb-10">
+                                Update Product: {productData?.data?.title}
+                            </h2>
+                            <Row gutter={8}>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSInput
+                                        type="text"
+                                        name="title"
+                                        label="Title"
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSInput
+                                        type="text"
+                                        name="author"
+                                        label="Author"
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSInput
+                                        type="number"
+                                        name="price"
+                                        label="Price"
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <Controller
+                                        name="image"
+                                        render={({
+                                            field: {
+                                                onChange,
+                                                value,
+                                                ...field
+                                            },
+                                        }) => (
+                                            <Form.Item
+                                                label="Picture"
+                                                className="font-bold"
+                                            >
+                                                <Input
+                                                    type="file"
+                                                    {...field}
+                                                    value={value?.fileName}
+                                                    onChange={(e) =>
+                                                        onChange(
+                                                            e.target.files?.[0]
+                                                        )
+                                                    }
+                                                    size="large"
+                                                    className="font-normal"
+                                                />
+                                            </Form.Item>
+                                        )}
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSSelect
+                                        name="category"
+                                        label="Category"
+                                        options={categoryOptions}
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSInput
+                                        type="number"
+                                        name="quantity"
+                                        label="Quantity"
+                                    />
+                                </Col>
+                                <Col
+                                    span={24}
+                                    md={{ span: 12 }}
+                                    lg={{ span: 8 }}
+                                >
+                                    <BSTextArea
+                                        name="description"
+                                        label="Description"
+                                    />
+                                </Col>
+                            </Row>
+                            <div className="flex">
+                                <Button
+                                    htmlType="submit"
+                                    type="primary"
+                                    className="!bg-secondary"
+                                >
+                                    Update
+                                </Button>
+                            </div>
+                        </BSForm>
+                    </Col>
+                </Row>
+            </div>
+        </>
     );
 };
 
