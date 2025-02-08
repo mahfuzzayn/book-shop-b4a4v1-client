@@ -24,13 +24,13 @@ const CreateProduct = () => {
     // This is only for development purposes
     // Should be removed
     const productDefaultValues = {
-        title: "Kila Kom Matoin",
-        author: "Mahfuz Zayn",
-        price: 78,
-        category: "SelfDevelopment",
-        quantity: 120,
-        description:
-            "Foria deko moja lagto pare, kiba tumar future hisebe ekbar cinta kora oigelo",
+        // title: "Kila Kom Matoin",
+        // author: "Mahfuz Zayn",
+        // price: 78,
+        // category: "SelfDevelopment",
+        // quantity: 120,
+        // description:
+        //     "Foria deko moja lagto pare, kiba tumar future hisebe ekbar cinta kora oigelo",
     };
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {

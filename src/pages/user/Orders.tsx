@@ -21,7 +21,7 @@ import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 import { Link } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useGetUserQuery } from "../../redux/features/auth/authApi";
-import { TOrder, TQueryParam } from "../../types";
+import { TOrder, TQueryParam, TResponse } from "../../types";
 
 type TTableData = Pick<
     TOrder,
@@ -95,7 +95,7 @@ const Orders = () => {
         setUpdatingOrderId(orderId);
 
         try {
-            await updateOrder(orderId).unwrap();
+            (await updateOrder(orderId).unwrap()) as TResponse<any>;
             toast.success(`Order has been ${newStatus}`, {
                 style: toastStyles.success,
             });
@@ -237,15 +237,16 @@ const Orders = () => {
     ];
 
     return (
-        <div className="p-6">
-            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-4">
+        <div className="p-8">
+            <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3 mb-16">
                 <Link to="/user/dashboard">
                     <Button type="primary" className="!bg-primary">
                         <ArrowLeftOutlined /> Dashboard
                     </Button>
                 </Link>
                 <h2 className="text-2xl md:text-3xl !font-bold">
-                    Orders of {userData?.name}
+                    Orders of{" "}
+                    <span className="text-primary">{userData?.name}</span>
                 </h2>
             </div>
             <Table
@@ -257,7 +258,7 @@ const Orders = () => {
                 rowKey="_id"
                 scroll={{ x: "max-content" }}
             />
-            <Flex justify="center" style={{ marginTop: "10px" }}>
+            <Flex justify="center" className="!my-10">
                 <Pagination
                     current={page}
                     onChange={(value) => setPage(value)}

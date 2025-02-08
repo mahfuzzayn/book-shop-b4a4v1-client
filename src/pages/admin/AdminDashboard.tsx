@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import {
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    ProductOutlined,
+    ShoppingCartOutlined,
+    UsergroupAddOutlined,
+} from "@ant-design/icons";
+import { Card, Col, Layout, Menu, Row, Spin, Statistic } from "antd";
 import { useState } from "react";
 import { adminSidebarPaths } from "../../routes/admin.routes";
 import { sidebarItemsGenerator } from "../../utils/sidebarItemsGenerator";
+import { Content } from "antd/es/layout/layout";
+import { useGetAllOrdersQuery } from "../../redux/features/admin/orderManagment.api";
+import { useGetAllProductsQuery } from "../../redux/features/admin/productManagement.api";
+import { useGetAllUsersQuery } from "../../redux/features/admin/userManagement.api";
 const { Sider } = Layout;
 
 const userRole = {
@@ -14,6 +24,24 @@ const userRole = {
 
 const AdminDashboard: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false);
+
+    const {
+        data: usersData,
+        isLoading: uIsLoading,
+        isFetching: uIsFetching,
+    } = useGetAllUsersQuery(undefined);
+
+    const {
+        data: productsData,
+        isLoading: pIsLoading,
+        isFetching: pIsFetching,
+    } = useGetAllProductsQuery(undefined);
+
+    const {
+        data: ordersData,
+        isLoading: oIsLoading,
+        isFetching: oIsFetching,
+    } = useGetAllOrdersQuery(undefined);
 
     const sidebarItems: any = sidebarItemsGenerator(
         adminSidebarPaths,
@@ -53,15 +81,63 @@ const AdminDashboard: React.FC = () => {
                     {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                 </button>
             </Sider>
-            {/* <Content
-                style={{
-                    margin: "16px",
-                    padding: "16px",
-                    background: "#f5f5f5",
-                    borderRadius: 8,
-                }}
-            >
-            </Content> */}
+            {!uIsLoading ||
+            !uIsFetching ||
+            !pIsLoading ||
+            !pIsFetching ||
+            !oIsLoading ||
+            !oIsFetching ? (
+                <Content
+                    style={{
+                        margin: "16px",
+                        padding: "16px",
+                        background: "#f5f5f5",
+                        borderRadius: 8,
+                    }}
+                >
+                    <div className="p-0 sm:p-6">
+                        <h2 className="text-xl sm:text-2xl font-bold mb-4">
+                            Dashboard Overview
+                        </h2>
+                        <Row gutter={20} className="space-y-5">
+                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+                                <Card>
+                                    <Statistic
+                                        title="Total Users"
+                                        value={usersData?.data?.length}
+                                        valueStyle={{ color: "#1890ff" }}
+                                        prefix={<UsergroupAddOutlined />}
+                                    />
+                                </Card>
+                            </Col>
+                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+                                <Card>
+                                    <Statistic
+                                        title="Total Products"
+                                        value={productsData?.data?.length}
+                                        valueStyle={{ color: "#1890ff" }}
+                                        prefix={<ProductOutlined />}
+                                    />
+                                </Card>
+                            </Col>
+                            <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
+                                <Card>
+                                    <Statistic
+                                        title="Total Orders"
+                                        value={ordersData?.data?.length}
+                                        valueStyle={{ color: "#1890ff" }}
+                                        prefix={<ShoppingCartOutlined />}
+                                    />
+                                </Card>
+                            </Col>
+                        </Row>
+                    </div>
+                </Content>
+            ) : (
+                <div className="flex justify-center items-center min-h-screen w-full">
+                    <Spin size="large" />
+                </div>
+            )}
         </Layout>
     );
 };

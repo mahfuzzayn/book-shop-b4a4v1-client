@@ -116,7 +116,7 @@ const UserProfile = () => {
         );
 
     return (
-        <div className="p-6">
+        <div className="p-8">
             <div className="flex flex-col md:flex-row items-start gap-y-3 gap-x-3  mb-4">
                 <Link to={`/${userData?.role}/dashboard`}>
                     <Button type="primary" className="!bg-primary">
@@ -128,7 +128,7 @@ const UserProfile = () => {
                     User Profile
                 </h2>
             </div>
-            <div className="flex justify-center items-center min-h-screen my-20">
+            <div className="flex justify-center items-center my-20">
                 <div className="flex flex-col items-center gap-y-2">
                     <div className="bg-primary text-accent p-3 px-5 rounded-full max-w-[60px] text-2xl">
                         {userData?.name?.slice(0, 1)}

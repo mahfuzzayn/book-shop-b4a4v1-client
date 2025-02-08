@@ -16,7 +16,7 @@ const { Text, Title } = Typography;
 
 const BSFooter = () => {
     return (
-        <Footer className="!bg-accent text-white p-8">
+        <Footer className="!bg-accent text-white p-8 mt-10">
             <Row
                 gutter={[16, 16]}
                 justify="space-between"

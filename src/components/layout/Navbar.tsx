@@ -22,14 +22,6 @@ const userRole = {
     ADMIN: "admin",
 };
 
-const theme = {
-    token: {
-        colorText: "hsl(128, 16%, 29%)",
-        colorTextHover: "hsl(17, 64%, 52%)",
-        colorPrimary: "hsl(11, 50%, 42%)",
-    },
-};
-
 const Navbar = () => {
     const token = useAppSelector(useCurrentToken);
     const dispatch = useAppDispatch();
@@ -68,8 +60,6 @@ const Navbar = () => {
             break;
     }
 
-    // console.log(navbarItems);
-
     return (
         <Layout>
             <Header className="!bg-accent shadow-md px-5 md:px-10 flex justify-between items-center relative">
@@ -84,16 +74,22 @@ const Navbar = () => {
                         <span className="!text-dark">Shop</span>
                     </Link>
                 </h2>
-
                 {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-6">
+                    <Link
+                        key="home"
+                        to="/"
+                        className="font-semibold !text-primary hover:!text-dark transition"
+                    >
+                        Home
+                    </Link>
                     {navbarItems.map((item: any) => (
                         <Link
                             key={item.key}
-                            to={item.path}
-                            className="font-semibold hover:text-primary transition"
+                            to={item?.label?.props?.to}
+                            className="font-semibold !text-primary hover:!text-dark transition"
                         >
-                            {item.label}
+                            {item.key}
                         </Link>
                     ))}
                     {!user ? (
@@ -115,7 +111,6 @@ const Navbar = () => {
                         </Button>
                     )}
                 </div>
-
                 {/* Hamburger Menu Button (Small Screens) */}
                 <button
                     className="md:hidden text-2xl"

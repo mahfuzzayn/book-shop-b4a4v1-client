@@ -12,7 +12,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Image, Select, Slider, Spin } from "antd";
 import {
     CloseOutlined,
-    LoadingOutlined,
     MenuOutlined,
 } from "@ant-design/icons";
 import { productCategories } from "../../constants/product";
@@ -141,7 +140,7 @@ const Products = () => {
 
     const metaData = productsData?.meta;
 
-    const tableData = productsData?.data?.map(
+    const gridData = productsData?.data?.map(
         ({ _id, title, author, image, quantity, price, inStock }) => ({
             key: _id,
             _id,
@@ -325,7 +324,7 @@ const Products = () => {
             </div>
 
             {!isLoading && !isFetching ? (
-                <div className="flex-1 p-5">
+                <div className="flex-1 py-12 px-0 sm:px-6">
                     <div
                         style={{
                             display: "grid",
@@ -335,7 +334,7 @@ const Products = () => {
                         }}
                         className="justify-items-center"
                     >
-                        {tableData?.map((product) => (
+                        {gridData?.map((product) => (
                             <div
                                 key={product._id}
                                 style={{

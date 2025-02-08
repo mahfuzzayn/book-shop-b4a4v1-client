@@ -3,6 +3,8 @@
 
 /* Tailwind */
 @import "tailwindcss";
+@import "swiper/css";
+@import "swiper/css/pagination";
 
 * {
     font-family: "Inter", serif;

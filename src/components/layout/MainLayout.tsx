@@ -11,12 +11,10 @@ const MainLayout = () => {
             <Navbar />
             <Layout>
                 <Content>
-                    <div className="min-h-screen">
-                        <Outlet />
-                    </div>
+                    <Outlet />
                 </Content>
-                <BSFooter />
             </Layout>
+            <BSFooter />
         </Layout>
     );
 };

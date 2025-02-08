@@ -4,16 +4,36 @@ import { routesGenerator } from "../utils/routesGenerator";
 import { userPaths } from "./user.routes";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import { publicPaths } from "./public.routes";
 import ProtectedRoute from "../components/layout/ProtectedRoute";
 import { adminPaths } from "./admin.routes";
 import Checkout from "../pages/checkout/Checkout";
+import Home from "../pages/public/Home";
+import Products from "../pages/public/Products";
+import About from "../pages/about/About";
+import ProductDetail from "../pages/public/ProductDetail";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        children: routesGenerator(publicPaths),
+        children: [
+            {
+                path: "/",
+                element: <Home />,
+            },
+            {
+                path: "/products",
+                element: <Products />,
+            },
+            {
+                path: "/products/detail/:productId",
+                element: <ProductDetail />,
+            },
+            {
+                path: "/about",
+                element: <About />,
+            },
+        ],
     },
     {
         path: "/user",
