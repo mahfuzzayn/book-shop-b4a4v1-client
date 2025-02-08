@@ -11,6 +11,7 @@ import BSInput from "../components/form/BSInput";
 import BSForm from "../components/form/BSForm";
 import BSPInput from "../components/form/BSPInput";
 import { toastStyles } from "../constants/toaster";
+import { Helmet } from "react-helmet-async";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -87,43 +88,55 @@ export default function Login() {
     };
 
     return (
-        <Row justify="center" align="middle" style={{ height: "100vh" }}>
-            <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
-                    <h2 className="text-4xl font-bold text-center mb-10">
-                        Book Shop Login
-                    </h2>
-                    <BSInput type="text" name="email" label="Email" />
-                    <BSPInput
-                        type="password"
-                        name="password"
-                        label="Password"
-                    />
-                    <h5>
-                        Don't have an Account?{" "}
-                        <span>
-                            <Link to="/register" className="!text-secondary">
-                                Register
-                            </Link>
-                        </span>
-                    </h5>
-                    <Button
-                        htmlType="submit"
-                        type="primary"
-                        className="!bg-primary"
-                    >
-                        Login
-                    </Button>
-                    <h5 className="text-center mt-10">
-                        Back to{" "}
-                        <span>
-                            <Link to="/" className="!text-secondary">
-                                Home
-                            </Link>
-                        </span>
-                    </h5>
-                </div>
-            </BSForm>
-        </Row>
+        <>
+            <Helmet>
+                <title>Login ‣ Book Shop</title>
+                <meta
+                    name="description"
+                    content="Access your BookShop dashboard. Sign in securely to manage products, orders, and more."
+                />
+            </Helmet>
+            <Row justify="center" align="middle" style={{ height: "100vh" }}>
+                <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
+                    <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
+                        <h2 className="text-4xl font-bold text-center mb-10">
+                            Book Shop Login
+                        </h2>
+                        <BSInput type="text" name="email" label="Email" />
+                        <BSPInput
+                            type="password"
+                            name="password"
+                            label="Password"
+                        />
+                        <h5>
+                            Don't have an Account?{" "}
+                            <span>
+                                <Link
+                                    to="/register"
+                                    className="!text-secondary"
+                                >
+                                    Register
+                                </Link>
+                            </span>
+                        </h5>
+                        <Button
+                            htmlType="submit"
+                            type="primary"
+                            className="!bg-primary"
+                        >
+                            Login
+                        </Button>
+                        <h5 className="text-center mt-10">
+                            Back to{" "}
+                            <span>
+                                <Link to="/" className="!text-secondary">
+                                    Home
+                                </Link>
+                            </span>
+                        </h5>
+                    </div>
+                </BSForm>
+            </Row>
+        </>
     );
 }

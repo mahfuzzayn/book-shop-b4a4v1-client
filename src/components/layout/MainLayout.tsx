@@ -7,7 +7,7 @@ const { Content } = Layout;
 
 const MainLayout = () => {
     return (
-        <Layout>
+        <Layout className="max-w-[1920px] mx-auto">
             <Navbar />
             <Layout>
                 <Content>
