@@ -62,7 +62,7 @@ const Navbar = () => {
 
     return (
         <Layout>
-            <Header className="!bg-accent shadow-md px-5 md:px-10 flex justify-between items-center relative">
+            <Header className="!bg-accent shadow-md !px-5 sm:!px-10 flex justify-between items-center relative">
                 {/* Logo */}
                 <h2 className="text-2xl font-extrabold">
                     <Link
@@ -113,7 +113,7 @@ const Navbar = () => {
                 </div>
                 {/* Hamburger Menu Button (Small Screens) */}
                 <button
-                    className="md:hidden text-2xl"
+                    className="md:hidden text-2xl px-1.5"
                     onClick={() => setIsMenuOpen(!isMenuOpen)}
                 >
                     {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />}

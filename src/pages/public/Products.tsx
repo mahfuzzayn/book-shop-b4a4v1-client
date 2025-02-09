@@ -76,7 +76,7 @@ const Products = () => {
         }
 
         const toastId = toast.loading("Adding to cart...", {
-            style: toastStyles.loading,
+            style: toastStyles.success,
         });
 
         try {

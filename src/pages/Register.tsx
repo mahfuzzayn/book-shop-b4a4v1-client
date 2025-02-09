@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Row } from "antd";
+import { Button } from "antd";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { useRegisterUserMutation } from "../redux/features/auth/authApi";
 import { Link, useNavigate } from "react-router-dom";
@@ -81,9 +81,9 @@ export default function Register() {
                     content="Create an account to manage your BookShop. Register to start adding books and tracking orders."
                 />
             </Helmet>
-            <Row justify="center" align="middle" style={{ height: "100vh" }}>
+            <div className="static sm:flex justify-center items-center min-h-screen">
                 <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                    <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
+                    <div className="space-y-5 min-h-screen sm:min-h-auto bg-accent px-10 py-20 sm:px-20 rounded-xl shadow-xl">
                         <h2 className="text-4xl font-bold text-center mb-10">
                             Book Shop Register
                         </h2>
@@ -119,7 +119,7 @@ export default function Register() {
                         </h5>
                     </div>
                 </BSForm>
-            </Row>
+            </div>
         </>
     );
 }

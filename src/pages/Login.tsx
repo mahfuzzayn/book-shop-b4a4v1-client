@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button, Row } from "antd";
+import { Button } from "antd";
 import { FieldValues } from "react-hook-form";
 import { useLoginUserMutation } from "../redux/features/auth/authApi";
 import { useAppDispatch } from "../redux/hook";
@@ -96,9 +96,9 @@ export default function Login() {
                     content="Access your BookShop dashboard. Sign in securely to manage products, orders, and more."
                 />
             </Helmet>
-            <Row justify="center" align="middle" style={{ height: "100vh" }}>
+            <div className="static sm:flex justify-center items-center min-h-screen">
                 <BSForm onSubmit={onSubmit} defaultValues={defaultValues}>
-                    <div className="space-y-5 bg-accent p-20 rounded-xl shadow-xl">
+                    <div className="space-y-5 min-h-screen sm:min-h-auto bg-accent px-10 py-20 sm:px-20 rounded-xl shadow-xl">
                         <h2 className="text-4xl font-bold text-center mb-10">
                             Book Shop Login
                         </h2>
@@ -136,7 +136,7 @@ export default function Login() {
                         </h5>
                     </div>
                 </BSForm>
-            </Row>
+            </div>
         </>
     );
 }
