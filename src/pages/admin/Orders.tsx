@@ -10,6 +10,7 @@ import {
     Flex,
     Pagination,
     TableProps,
+    Tooltip,
 } from "antd";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,6 +18,7 @@ import { toastStyles } from "../../constants/toaster";
 import { Link } from "react-router-dom";
 import {
     ArrowLeftOutlined,
+    CopyOutlined,
     DeleteOutlined,
     ExclamationCircleFilled,
 } from "@ant-design/icons";
@@ -27,6 +29,7 @@ import {
 } from "../../redux/features/admin/orderManagment.api";
 import { TOrder, TQueryParam, TResponse } from "../../types";
 import { Helmet } from "react-helmet-async";
+import moment from "moment";
 
 type TTableData = Pick<
     TOrder,
@@ -221,9 +224,59 @@ const Orders = () => {
             title: "Order ID",
             dataIndex: "_id",
             key: "_id",
-            render: (id: string) => (
-                <span className="font-medium">{id.slice(-6)}</span>
-            ),
+            render: (orderId: string) => {
+                const copyToClipboard = () => {
+                    navigator.clipboard.writeText(orderId);
+                };
+
+                return (
+                    <div className="flex items-center gap-1">
+                        <span className="font-medium">{`${orderId.slice(
+                            0,
+                            4
+                        )}${orderId.slice(-4)}`}</span>
+                        <Tooltip title="Copy">
+                            <Button
+                                type="text"
+                                icon={<CopyOutlined />}
+                                onClick={copyToClipboard}
+                                size="small"
+                                className="p-1"
+                            />
+                        </Tooltip>
+                    </div>
+                );
+            },
+        },
+        {
+            title: "Transaction ID",
+            dataIndex: "transactionId",
+            key: "transactionId",
+            render: (transactionId: string) => {
+                const copyToClipboard = () => {
+                    navigator.clipboard.writeText(transactionId);
+                };
+
+                return (
+                    <div className="flex items-center gap-1">
+                        <span className="font-medium">{`${transactionId.slice(
+                            0,
+                            3
+                        )}${transactionId.slice(3, 5)}${transactionId.slice(
+                            -5
+                        )}`}</span>
+                        <Tooltip title="Copy">
+                            <Button
+                                type="text"
+                                icon={<CopyOutlined />}
+                                onClick={copyToClipboard}
+                                className="p-1"
+                                size="small"
+                            />
+                        </Tooltip>
+                    </div>
+                );
+            },
         },
         {
             title: "Customer Name",
@@ -301,6 +354,17 @@ const Orders = () => {
                     <DeleteOutlined />
                 </Button>
             ),
+        },
+        {
+            title: "Order Date",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            render: (createdAt: string) => {
+                const formattedDate = moment(createdAt).format(
+                    "h:mm A, dddd, D MMM, YYYY"
+                );
+                return <span>{formattedDate}</span>;
+            },
         },
     ];
 
