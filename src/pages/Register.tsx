@@ -14,9 +14,9 @@ export default function Register() {
     const navigate = useNavigate();
 
     const defaultValues = {
-        name: "Sutra Mia",
-        email: "sutramia786@gmail.com",
-        password: "bookghor2025",
+        // name: "Sutra Mia",
+        // email: "sutramia786@gmail.com",
+        // password: "bookghor2025",
     };
 
     const [register] = useRegisterUserMutation();
