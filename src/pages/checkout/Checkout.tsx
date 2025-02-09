@@ -150,7 +150,7 @@ const CheckoutPage = () => {
             style: toastStyles.loading,
         });
 
-        setIsClientSecretLoading(true)
+        setIsClientSecretLoading(true);
 
         const res = (await createPaymentIntent({
             amount: calculateSubtotal() * 100,
@@ -354,7 +354,11 @@ const CheckoutPage = () => {
                                     className="font-normal text-dark"
                                 >
                                     {index + 1}. {item.price}$ x {item.quantity}{" "}
-                                    = {item.price * item.quantity}$
+                                    ={" "}
+                                    {Math.round(
+                                        item.price * item.quantity * 100
+                                    ) / 100}
+                                    $
                                 </span>
                             )
                         )}
